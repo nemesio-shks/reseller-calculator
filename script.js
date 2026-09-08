@@ -5,7 +5,7 @@ function uid() {
 }
 
 function defaultProject(name) {
-  return { id: uid(), name: name || 'Проект 1', currency: 'UAH', cars: [] };
+  return { id: uid(), name: name || 'Проект 1', currency: 'RUB', cars: [] };
 }
 
 function defaultState() {
@@ -242,7 +242,7 @@ async function loadUserData() {
     if (!state.bgPos) state.bgPos = { x: 0, y: 0, zoom: 100 };
     if (!state.bgType) state.bgType = 'video';
     state.projects.forEach(p => {
-      if (!p.currency) p.currency = 'UAH';
+      if (!p.currency) p.currency = 'RUB';
       p.cars.forEach(c => {
         if (!c.adjustments) c.adjustments = [];
         if (!c.comments) c.comments = [];
@@ -486,7 +486,7 @@ currencySelect.addEventListener('change', () => {
 function renderProjectHeader() {
   const project = getActiveProject();
   projectNameInput.value = project.name;
-  currencySelect.value = project.currency || 'UAH';
+  currencySelect.value = project.currency || 'RUB';
 }
 
 // ---------- Tabs ----------
