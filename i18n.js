@@ -66,6 +66,8 @@ export const translations = {
     settingsBgType: 'Тип фону',
     bgTypeVideo: 'Відео (за замовчуванням)',
     bgTypeImage: 'Зображення',
+    saveError: 'Не вдалося зберегти дані. Перевірте інтернет-з\'єднання і спробуйте ще раз.',
+    imageProcessError: 'Не вдалося обробити зображення. Спробуйте інший файл.',
   },
   ru: {
     appTitle: 'Калькулятор перекупа',
@@ -134,6 +136,8 @@ export const translations = {
     settingsBgType: 'Тип фона',
     bgTypeVideo: 'Видео (по умолчанию)',
     bgTypeImage: 'Изображение',
+    saveError: 'Не удалось сохранить данные. Проверьте интернет-соединение и попробуйте снова.',
+    imageProcessError: 'Не удалось обработать изображение. Попробуйте другой файл.',
   }
 };
 
