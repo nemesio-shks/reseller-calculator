@@ -787,6 +787,7 @@ function renderHistory() {
   [...project.cars].reverse().forEach(car => {
     const profit = getCarProfit(car);
     const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
+    const totalCost = car.buyPrice + adjTotal;
     const isSold = car.sellPrice != null;
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -794,17 +795,24 @@ function renderHistory() {
       <td>${formatMoney(car.buyPrice, project.currency)}</td>
       <td>${isSold ? formatMoney(car.sellPrice, project.currency) : '—'}</td>
       <td>${adjTotal ? (adjTotal >= 0 ? '+' : '') + formatMoney(adjTotal, project.currency) : '—'} <span class="link-btn" data-id="${car.id}" data-action="adjust">${t('editComment')}</span></td>
+      <td class="total-cost-cell">${formatMoney(totalCost, project.currency)}</td>
       <td class="${profit == null ? '' : (profit >= 0 ? 'profit-pos' : 'profit-neg')}">${profit == null ? '—' : (profit >= 0 ? '+' : '') + formatMoney(profit, project.currency)}</td>
       <td>
         ${isSold
           ? `<span class="status-badge status-sold">${t('statusSold')}</span>`
-          : `<span class="status-badge status-notsold">${t('statusNotSold')}</span><br><span class="link-btn" data-id="${car.id}" data-action="marksold">${t('markSold')}</span>`
+          : `<span class="status-badge status-notsold">${t('statusNotSold')}</span>
+             <div class="inline-sell-row">
+               <input type="text" inputmode="decimal" class="inline-sell-input" data-id="${car.id}" placeholder="${t('sellPricePlaceholder')}">
+               <button class="link-btn inline-sell-confirm" data-id="${car.id}" data-action="marksold">${t('confirmSaleBtn')}</button>
+             </div>`
         }
       </td>
       <td><span class="del-row" data-id="${car.id}" data-action="delete">✕</span></td>
     `;
     historyBody.appendChild(tr);
   });
+
+  historyBody.querySelectorAll('.inline-sell-input').forEach(attachThousandsFormatting);
 
   historyBody.querySelectorAll('[data-action="delete"]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -820,10 +828,13 @@ function renderHistory() {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id');
       const car = project.cars.find(c => c.id === id);
-      const priceStr = prompt(t('sellPricePrompt'));
-      if (priceStr === null) return;
-      const price = parseNumberInput(priceStr);
-      if (isNaN(price)) return;
+      const input = historyBody.querySelector(`.inline-sell-input[data-id="${id}"]`);
+      if (!input) return;
+      const price = parseNumberInput(input.value);
+      if (isNaN(price)) {
+        input.focus();
+        return;
+      }
       car.sellPrice = price;
       scheduleSave();
       renderAll();

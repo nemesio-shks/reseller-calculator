@@ -392,6 +392,50 @@ tbody tr:hover {
   color: var(--muted);
 }
 
+.total-cost-cell {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.inline-sell-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  align-items: center;
+}
+
+.inline-sell-input {
+  width: 110px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: var(--text-main);
+  font-size: 13px;
+}
+
+.inline-sell-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.inline-sell-confirm {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.inline-sell-confirm:hover {
+  filter: brightness(1.1);
+}
+
 .empty-msg {
   text-align: center;
   color: var(--muted);
