@@ -1359,12 +1359,6 @@ function renderCarSuggestions(query) {
 function selectCarSuggestion(car) {
   carNameInput.value = car.name;
   selectedCarImage = car.image || null;
-  if (car.price) {
-    const priceNum = parseNumberInput(car.price.replace(/\./g, ''));
-    if (!isNaN(priceNum)) {
-      buyPriceInputEl.value = formatNumberPlain(priceNum);
-    }
-  }
   carSuggestions.classList.add('hidden');
   carSuggestions.innerHTML = '';
   carPreview.classList.add('hidden');
