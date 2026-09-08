@@ -12,6 +12,8 @@
   <video id="bgVideoEl" class="bg-video-el" autoplay muted loop playsinline>
     <source src="assets/bg-video.mp4" type="video/mp4">
   </video>
+  <video id="bgCustomVideoEl" class="bg-video-el hidden" autoplay muted loop playsinline></video>
+  <img id="bgCustomGifEl" class="bg-video-el hidden" alt="">
   <div class="bg-particles" id="bgParticles"></div>
   <img id="bgImageEl" class="bg-image-el hidden" alt="">
 </div>
@@ -209,8 +211,9 @@
         <span data-i18n="settingsBgType">Тип фону</span>
       </div>
       <select id="bgTypeSelect" class="mini-select">
-        <option value="video" data-i18n="bgTypeVideo">Відео (за замовчуванням)</option>
-        <option value="image" data-i18n="bgTypeImage">Зображення</option>
+        <option value="video" data-i18n="bgTypeVideo">Стандартне відео</option>
+        <option value="image" data-i18n="bgTypeImage">Своє зображення</option>
+        <option value="custom-video" data-i18n="bgTypeCustomVideo">Своє відео/GIF</option>
       </select>
     </div>
 
@@ -229,6 +232,32 @@
       </div>
     </div>
 
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-icon">🎞️</span>
+        <span data-i18n="settingsBgVideo">Своє відео/GIF</span>
+      </div>
+      <div class="settings-row-actions">
+        <label class="btn btn-add-project bg-upload-btn">
+          <span data-i18n="bgVideoBtn">Завантажити</span>
+          <input type="file" id="bgVideoInput" accept="video/mp4,video/webm,image/gif" class="hidden-input">
+        </label>
+        <button class="btn btn-add-project" id="bgVideoResetBtn" data-i18n="bgReset">Скинути</button>
+      </div>
+    </div>
+    <p class="bg-editor-hint" data-i18n="bgVideoLimitsHint">Ліміти: файл до 20 МБ, відео до 15 секунд.</p>
+
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-icon">📐</span>
+        <span data-i18n="settingsFit">Показ фону</span>
+      </div>
+      <select id="bgFitSelect" class="mini-select">
+        <option value="cover" data-i18n="fitCover">Заповнити екран</option>
+        <option value="contain" data-i18n="fitContain">Показати повністю</option>
+      </select>
+    </div>
+
     <button class="btn btn-add-project modal-close-btn" id="closeSettingsBtn" data-i18n="close">Закрити</button>
   </div>
 </div>
@@ -243,7 +272,7 @@
     </div>
     <div class="bg-editor-controls">
       <span class="settings-icon">🔍</span>
-      <input type="range" id="bgZoomRange" min="100" max="300" value="100" step="1">
+      <input type="range" id="bgZoomRange" min="30" max="300" value="100" step="1">
     </div>
     <div class="bg-editor-actions">
       <button class="btn btn-add-project" id="bgEditorCancelBtn" data-i18n="cancel">Скасувати</button>

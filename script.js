@@ -4,13 +4,58 @@ function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+// ---------- IndexedDB storage for custom bg video/gif (local to this browser) ----------
+const IDB_NAME = 'reseller_calc_media';
+const IDB_STORE = 'bgMedia';
+
+function openMediaDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore(IDB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveCustomBgMedia(key, blob) {
+  const db = await openMediaDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(blob, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function loadCustomBgMedia(key) {
+  const db = await openMediaDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteCustomBgMedia(key) {
+  const db = await openMediaDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).delete(key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
 function defaultProject(name) {
   return { id: uid(), name: name || 'Проект 1', currency: 'RUB', cars: [] };
 }
 
 function defaultState() {
   const p = defaultProject('Проект 1');
-  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 }, bgType: 'video' };
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 }, bgType: 'video', bgFit: 'cover' };
 }
 
 let state = defaultState();
@@ -66,6 +111,14 @@ const bgParticles = document.getElementById('bgParticles');
 const bgImageEl = document.getElementById('bgImageEl');
 const bgVideoEl = document.getElementById('bgVideoEl');
 const bgTypeSelect = document.getElementById('bgTypeSelect');
+const bgFitSelect = document.getElementById('bgFitSelect');
+const bgCustomVideoEl = document.getElementById('bgCustomVideoEl');
+const bgCustomGifEl = document.getElementById('bgCustomGifEl');
+const bgVideoInput = document.getElementById('bgVideoInput');
+const bgVideoResetBtn = document.getElementById('bgVideoResetBtn');
+
+const CUSTOM_BG_MAX_BYTES = 20 * 1024 * 1024; // 20 MB
+const CUSTOM_BG_MAX_DURATION = 15; // seconds
 
 const adjustModal = document.getElementById('adjustModal');
 const adjustBody = document.getElementById('adjustBody');
@@ -246,6 +299,7 @@ async function loadUserData() {
     if (!state.theme) state.theme = 'dark';
     if (!state.bgPos) state.bgPos = { x: 0, y: 0, zoom: 100 };
     if (!state.bgType) state.bgType = 'video';
+    if (!state.bgFit) state.bgFit = 'cover';
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'RUB';
       p.cars.forEach(c => {
@@ -271,58 +325,167 @@ themeSelect.addEventListener('change', () => {
   scheduleSave();
 });
 
+// ---------- Background image/video positioning helper ----------
+function positionMediaElement(el, naturalW, naturalH, pos, fit) {
+  if (!naturalW || !naturalH) return;
+  const viewportRect = bgLayer.getBoundingClientRect();
+  const baseScale = fit === 'contain'
+    ? Math.min(viewportRect.width / naturalW, viewportRect.height / naturalH)
+    : Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
+  const scale = baseScale * (pos.zoom / 100);
+  el.style.width = naturalW + 'px';
+  el.style.height = naturalH + 'px';
+  el.style.left = '50%';
+  el.style.top = '50%';
+  el.style.transform = `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
+}
+
+let bgLayerResizeHandler = () => {};
+let currentCustomVideoUrl = null;
+
 // ---------- Background image ----------
 function applyBackground() {
   const bgType = state.bgType || 'video';
+  const fit = state.bgFit || 'cover';
   bgTypeSelect.value = bgType;
+  bgFitSelect.value = fit;
 
-  const useVideo = bgType === 'video';
-  bgVideoEl.classList.toggle('hidden', !useVideo);
-  if (useVideo) {
-    bgVideoEl.play().catch(() => {});
-  } else {
-    bgVideoEl.pause();
-  }
+  const useDefaultVideo = bgType === 'video';
+  const useImage = bgType === 'image';
+  const useCustomVideo = bgType === 'custom-video';
 
-  if (!useVideo && state.bgImage) {
+  bgVideoEl.classList.toggle('hidden', !useDefaultVideo);
+  if (useDefaultVideo) bgVideoEl.play().catch(() => {}); else bgVideoEl.pause();
+
+  bgImageEl.classList.toggle('hidden', !(useImage && state.bgImage));
+  bgLayer.classList.toggle('has-custom-bg', useImage || useCustomVideo);
+
+  window.removeEventListener('resize', bgLayerResizeHandler);
+
+  if (useImage && state.bgImage) {
     bgImageEl.src = state.bgImage;
-    bgImageEl.classList.remove('hidden');
-    bgLayer.classList.add('has-custom-bg');
-
     const pos = state.bgPos || { x: 0, y: 0, zoom: 100 };
-    const positionImg = () => {
-      const viewportRect = bgLayer.getBoundingClientRect();
-      const naturalW = bgImageEl.naturalWidth;
-      const naturalH = bgImageEl.naturalHeight;
-      if (!naturalW || !naturalH) return;
-      const baseScale = Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
-      const scale = baseScale * (pos.zoom / 100);
-      bgImageEl.style.width = naturalW + 'px';
-      bgImageEl.style.height = naturalH + 'px';
-      bgImageEl.style.left = '50%';
-      bgImageEl.style.top = '50%';
-      bgImageEl.style.transform = `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
-    };
-
-    if (bgImageEl.complete && bgImageEl.naturalWidth) {
-      positionImg();
-    } else {
-      bgImageEl.onload = positionImg;
-    }
-    window.removeEventListener('resize', bgLayerResizeHandler);
+    const positionImg = () => positionMediaElement(bgImageEl, bgImageEl.naturalWidth, bgImageEl.naturalHeight, pos, fit);
+    if (bgImageEl.complete && bgImageEl.naturalWidth) positionImg();
+    else bgImageEl.onload = positionImg;
     bgLayerResizeHandler = positionImg;
     window.addEventListener('resize', bgLayerResizeHandler);
   } else {
-    bgImageEl.classList.add('hidden');
     bgImageEl.removeAttribute('src');
-    bgLayer.classList.remove('has-custom-bg');
-    window.removeEventListener('resize', bgLayerResizeHandler);
+  }
+
+  bgCustomVideoEl.classList.add('hidden');
+  bgCustomGifEl.classList.add('hidden');
+  bgCustomVideoEl.pause();
+
+  if (useCustomVideo) {
+    loadCustomBgMedia('bgCustomFile').then(stored => {
+      if (!stored || state.bgType !== 'custom-video') return;
+      if (currentCustomVideoUrl) {
+        URL.revokeObjectURL(currentCustomVideoUrl);
+        currentCustomVideoUrl = null;
+      }
+      const url = URL.createObjectURL(stored.blob);
+      currentCustomVideoUrl = url;
+      const pos = state.bgPos || { x: 0, y: 0, zoom: 100 };
+
+      if (stored.mimeType === 'image/gif') {
+        bgCustomGifEl.src = url;
+        bgCustomGifEl.classList.remove('hidden');
+        const positionGif = () => positionMediaElement(bgCustomGifEl, bgCustomGifEl.naturalWidth, bgCustomGifEl.naturalHeight, pos, fit);
+        bgCustomGifEl.onload = positionGif;
+        bgLayerResizeHandler = positionGif;
+      } else {
+        bgCustomVideoEl.src = url;
+        bgCustomVideoEl.classList.remove('hidden');
+        bgCustomVideoEl.play().catch(() => {});
+        const positionVid = () => positionMediaElement(bgCustomVideoEl, bgCustomVideoEl.videoWidth, bgCustomVideoEl.videoHeight, pos, fit);
+        bgCustomVideoEl.onloadedmetadata = positionVid;
+        bgLayerResizeHandler = positionVid;
+      }
+      window.addEventListener('resize', bgLayerResizeHandler);
+    });
   }
 }
-let bgLayerResizeHandler = () => {};
 
 bgTypeSelect.addEventListener('change', () => {
   state.bgType = bgTypeSelect.value;
+  applyBackground();
+  scheduleSave();
+});
+
+bgFitSelect.addEventListener('change', () => {
+  state.bgFit = bgFitSelect.value;
+  applyBackground();
+  scheduleSave();
+});
+
+// ---------- Custom video/GIF background upload ----------
+function getVideoDuration(file) {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src);
+      resolve(video.duration);
+    };
+    video.onerror = () => reject(new Error('cannot read video metadata'));
+    video.src = URL.createObjectURL(file);
+  });
+}
+
+bgVideoInput.addEventListener('change', async () => {
+  const file = bgVideoInput.files[0];
+  if (!file) return;
+
+  const allowedTypes = ['video/mp4', 'video/webm', 'image/gif'];
+  if (!allowedTypes.includes(file.type)) {
+    alert(t('bgVideoWrongType'));
+    bgVideoInput.value = '';
+    return;
+  }
+
+  if (file.size > CUSTOM_BG_MAX_BYTES) {
+    alert(t('bgVideoTooLarge'));
+    bgVideoInput.value = '';
+    return;
+  }
+
+  if (file.type !== 'image/gif') {
+    try {
+      const duration = await getVideoDuration(file);
+      if (duration > CUSTOM_BG_MAX_DURATION) {
+        alert(t('bgVideoTooLong'));
+        bgVideoInput.value = '';
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  try {
+    await saveCustomBgMedia('bgCustomFile', { blob: file, mimeType: file.type });
+    state.bgType = 'custom-video';
+    state.bgPos = { x: 0, y: 0, zoom: 100 };
+    applyBackground();
+    scheduleSave();
+  } catch (err) {
+    console.error('Помилка збереження медіа:', err);
+    alert(t('imageProcessError'));
+  }
+  bgVideoInput.value = '';
+});
+
+bgVideoResetBtn.addEventListener('click', async () => {
+  try {
+    await deleteCustomBgMedia('bgCustomFile');
+  } catch (err) {
+    console.error(err);
+  }
+  if (state.bgType === 'custom-video') {
+    state.bgType = 'video';
+  }
   applyBackground();
   scheduleSave();
 });
@@ -410,8 +573,11 @@ function openBgEditor() {
     const naturalW = bgEditorImg.naturalWidth;
     const naturalH = bgEditorImg.naturalHeight;
 
-    // base scale so the image fully covers the viewport (like background-size: cover) while keeping aspect ratio
-    bgEditorBaseScale = Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
+    // base scale so the image fits the viewport (cover or contain) while keeping aspect ratio
+    const fit = state.bgFit || 'cover';
+    bgEditorBaseScale = fit === 'contain'
+      ? Math.min(viewportRect.width / naturalW, viewportRect.height / naturalH)
+      : Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
 
     bgEditorImg.style.width = naturalW + 'px';
     bgEditorImg.style.height = naturalH + 'px';
