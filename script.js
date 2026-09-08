@@ -82,7 +82,24 @@ function attachThousandsFormatting(input) {
   input.addEventListener('input', () => {
     const cursorFromEnd = input.value.length - input.selectionStart;
     let raw = input.value.replace(/[^\d.,-]/g, '');
-    input.value = raw;
+
+    const isNegative = raw.startsWith('-');
+    if (isNegative) raw = raw.slice(1);
+
+    const sepIdx = raw.search(/[.,]/);
+    let intPart = sepIdx === -1 ? raw : raw.slice(0, sepIdx);
+    let fracPart = sepIdx === -1 ? '' : raw.slice(sepIdx + 1).replace(/[.,]/g, '');
+
+    intPart = intPart.replace(/^0+(?=\d)/, '');
+    const groupedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+    let formatted = groupedInt;
+    if (sepIdx !== -1) formatted += ',' + fracPart;
+    if (isNegative) formatted = '-' + formatted;
+
+    input.value = formatted;
+    const newPos = Math.max(0, formatted.length - cursorFromEnd);
+    input.setSelectionRange(newPos, newPos);
   });
   input.addEventListener('blur', () => {
     const num = parseNumberInput(input.value);
