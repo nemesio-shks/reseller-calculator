@@ -229,8 +229,13 @@ function scheduleSave() {
 
 async function saveData() {
   if (!currentUser || !fb) return;
-  const ref = fb.doc(fb.db, 'users', currentUser.uid);
-  await fb.setDoc(ref, { state }, { merge: false });
+  try {
+    const ref = fb.doc(fb.db, 'users', currentUser.uid);
+    await fb.setDoc(ref, { state }, { merge: false });
+  } catch (err) {
+    console.error('Помилка збереження даних:', err);
+    alert(t('saveError'));
+  }
 }
 
 async function loadUserData() {
@@ -322,18 +327,54 @@ bgTypeSelect.addEventListener('change', () => {
   scheduleSave();
 });
 
-bgInput.addEventListener('change', () => {
+function compressImageFile(file, maxDimension, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        if (w > maxDimension || h > maxDimension) {
+          if (w >= h) {
+            h = Math.round(h * (maxDimension / w));
+            w = maxDimension;
+          } else {
+            w = Math.round(w * (maxDimension / h));
+            h = maxDimension;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+bgInput.addEventListener('change', async () => {
   const file = bgInput.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    state.bgImage = reader.result;
+  try {
+    const compressed = await compressImageFile(file, 1600, 0.75);
+    state.bgImage = compressed;
     state.bgPos = { x: 0, y: 0, zoom: 100 };
+    state.bgType = 'image';
     applyBackground();
     scheduleSave();
     openBgEditor();
-  };
-  reader.readAsDataURL(file);
+  } catch (err) {
+    console.error('Помилка обробки зображення:', err);
+    alert(t('imageProcessError'));
+  }
+  bgInput.value = '';
 });
 
 bgResetBtn.addEventListener('click', () => {
