@@ -1303,13 +1303,25 @@ function renderCarSuggestions(query) {
 
   const qNormalized = normalizeForSearch(q);
   const qAliased = applyCarNameAliases(q).replace(/[^a-z0-9]/g, '');
-  const matches = list.filter(car => {
+  const filtered = list.filter(car => {
     const nameNormalized = normalizeSearchStr(car.name);
     if (nameNormalized.includes(q)) return true;
     const nameTranslit = normalizeForSearch(car.name);
     if (nameTranslit.includes(qNormalized)) return true;
     return nameTranslit.includes(qAliased);
-  }).slice(0, 15);
+  });
+
+  // Sort by relevance: names starting with the query first, then alphabetically
+  filtered.sort((a, b) => {
+    const aName = normalizeSearchStr(a.name);
+    const bName = normalizeSearchStr(b.name);
+    const aStarts = aName.startsWith(q) ? 0 : 1;
+    const bStarts = bName.startsWith(q) ? 0 : 1;
+    if (aStarts !== bStarts) return aStarts - bStarts;
+    return aName.localeCompare(bName);
+  });
+
+  const matches = filtered.slice(0, 40);
   currentSuggestions = matches;
   carSuggestionIndex = -1;
 
