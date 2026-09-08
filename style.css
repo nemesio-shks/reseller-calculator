@@ -339,16 +339,14 @@ body {
 }
 
 .car-preview {
-  position: absolute;
-  left: calc(100% + 12px);
-  top: 0;
-  z-index: 40;
-  width: 260px;
+  position: fixed;
+  z-index: 200;
+  width: 340px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   pointer-events: none;
 }
 
@@ -361,7 +359,7 @@ body {
 
 .car-preview-name {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-main);
   text-align: center;
   font-weight: 600;
@@ -369,9 +367,6 @@ body {
 
 @media (max-width: 860px) {
   .car-preview {
-    left: 50%;
-    top: calc(100% + 8px);
-    transform: translateX(-50%);
     width: 220px;
   }
 }

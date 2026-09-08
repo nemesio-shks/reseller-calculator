@@ -1018,6 +1018,24 @@ function normalizeSearchStr(s) {
   return (s || '').toLowerCase().trim();
 }
 
+function positionCarPreview(clientX, clientY) {
+  const offset = 20;
+  const previewWidth = carPreview.offsetWidth || 340;
+  const previewHeight = carPreview.offsetHeight || 260;
+
+  let left = clientX + offset;
+  let top = clientY - previewHeight / 2;
+
+  if (left + previewWidth > window.innerWidth) {
+    left = clientX - previewWidth - offset;
+  }
+  if (top < 0) top = 8;
+  if (top + previewHeight > window.innerHeight) top = window.innerHeight - previewHeight - 8;
+
+  carPreview.style.left = left + 'px';
+  carPreview.style.top = top + 'px';
+}
+
 function renderCarSuggestions(query) {
   const list = window.CARS_FLAT_LIST || [];
   const q = normalizeSearchStr(query);
@@ -1059,10 +1077,14 @@ function renderCarSuggestions(query) {
     });
 
     if (car.image) {
-      el.addEventListener('mouseenter', () => {
+      el.addEventListener('mouseenter', (e) => {
         carPreviewImg.src = car.image;
         carPreviewName.textContent = car.name;
         carPreview.classList.remove('hidden');
+        positionCarPreview(e.clientX, e.clientY);
+      });
+      el.addEventListener('mousemove', (e) => {
+        positionCarPreview(e.clientX, e.clientY);
       });
       el.addEventListener('mouseleave', () => {
         carPreview.classList.add('hidden');
