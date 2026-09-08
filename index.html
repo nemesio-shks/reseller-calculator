@@ -7,88 +7,177 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="bg-layer" id="bgLayer"></div>
+
+<img src="assets/radmirlogo.png" alt="logo" class="corner-logo" id="cornerLogo">
+
 <div class="app">
-  <header>
-    <h1>Калькулятор перекупа</h1>
+  <header class="top-header">
+    <h1 data-i18n="appTitle">Калькулятор перекупа</h1>
+    <div class="top-controls">
+      <select id="langSelect" class="mini-select">
+        <option value="uk">UA</option>
+        <option value="ru">RU</option>
+      </select>
+    </div>
   </header>
 
   <section class="card auth-card" id="authCard">
-    <h2 id="authTitle">Вхід у кабінет</h2>
+    <h2 id="authTitle" data-i18n="loginTitle">Вхід у кабінет</h2>
     <form id="authForm">
       <div class="field">
         <label for="authEmail">Email</label>
         <input type="email" id="authEmail" placeholder="you@example.com" required>
       </div>
       <div class="field">
-        <label for="authPassword">Пароль</label>
-        <input type="password" id="authPassword" placeholder="мінімум 6 символів" required minlength="6">
+        <label for="authPassword" data-i18n="password">Пароль</label>
+        <input type="password" id="authPassword" data-i18n-placeholder="passwordPlaceholder" placeholder="мінімум 6 символів" required minlength="6">
       </div>
       <p class="auth-error" id="authError"></p>
-      <button type="submit" class="btn btn-primary" id="authSubmitBtn">Увійти</button>
+      <button type="submit" class="btn btn-primary" id="authSubmitBtn" data-i18n="loginBtn">Увійти</button>
       <p class="auth-switch">
-        <span id="authSwitchText">Немає акаунта?</span>
-        <a href="#" id="authSwitchLink">Зареєструватися</a>
+        <span id="authSwitchText" data-i18n="noAccount">Немає акаунта?</span>
+        <a href="#" id="authSwitchLink" data-i18n="registerLink">Зареєструватися</a>
       </p>
     </form>
   </section>
 
   <div id="appContent" class="hidden">
-  <div class="user-bar">
-    <span id="userEmailLabel"></span>
-    <button class="btn btn-add-project" id="logoutBtn">Вийти</button>
-  </div>
-
-  <div class="projects-bar">
-    <div class="projects-tabs" id="projectsTabs"></div>
-    <button class="btn btn-add-project" id="addProjectBtn">+ Новий проект</button>
-  </div>
-
-  <main>
-    <section class="card form-card">
-      <h2>Додати авто</h2>
-      <form id="carForm">
-        <div class="field">
-          <label for="carName">Назва авто</label>
-          <input type="text" id="carName" placeholder="Наприклад: BMW E39" required>
-        </div>
-        <div class="field-row">
-          <div class="field">
-            <label for="buyPrice">Ціна покупки</label>
-            <input type="number" id="buyPrice" placeholder="0" min="0" step="0.01" required>
-          </div>
-          <div class="field">
-            <label for="sellPrice">Ціна продажу</label>
-            <input type="number" id="sellPrice" placeholder="0" min="0" step="0.01" required>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Додати в історію</button>
-      </form>
-    </section>
-
-    <section class="card history-card">
-      <h2>Історія авто</h2>
-      <div class="table-wrap">
-        <table id="historyTable">
-          <thead>
-            <tr>
-              <th>Назва</th>
-              <th>Покупка</th>
-              <th>Продаж</th>
-              <th>Чистий плюс</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="historyBody"></tbody>
-        </table>
-        <p id="emptyMsg" class="empty-msg">Ще немає жодного авто в цьому проекті</p>
+    <div class="user-bar">
+      <div class="user-bar-left">
+        <img src="assets/r_rp.png" alt="R_RP" class="brand-logo shine">
+        <span id="userEmailLabel"></span>
       </div>
-    </section>
-  </main>
+      <div class="user-bar-right">
+        <select id="themeSelect" class="mini-select">
+          <option value="dark" data-i18n="themeDark">Темна</option>
+          <option value="light" data-i18n="themeLight">Світла</option>
+          <option value="purple" data-i18n="themePurple">Фіолетова</option>
+        </select>
+        <label class="btn btn-add-project bg-upload-btn">
+          <span data-i18n="bgBtn">Фон</span>
+          <input type="file" id="bgInput" accept="image/*" class="hidden-input">
+        </label>
+        <button class="btn btn-add-project" id="bgResetBtn" data-i18n="bgReset">Скинути фон</button>
+        <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
+      </div>
+    </div>
 
-  <footer class="total-bar">
-    <span>Загальний заробіток по проекту:</span>
-    <span id="totalSum" class="total-sum">0 грн</span>
-  </footer>
+    <div class="projects-bar">
+      <div class="projects-tabs" id="projectsTabs"></div>
+      <button class="btn btn-add-project" id="addProjectBtn" data-i18n="newProjectBtn">+ Новий проект</button>
+    </div>
+
+    <div class="project-header card" id="projectHeaderCard">
+      <div class="field project-name-field">
+        <label data-i18n="projectName">Назва проекту</label>
+        <div class="inline-edit-row">
+          <input type="text" id="projectNameInput" maxlength="40">
+          <button class="btn btn-add-project" id="saveProjectNameBtn" data-i18n="save">Зберегти</button>
+        </div>
+      </div>
+      <div class="field currency-field">
+        <label data-i18n="currency">Валюта</label>
+        <select id="currencySelect">
+          <option value="UAH">₴ Гривня</option>
+          <option value="USD">$ Долар</option>
+          <option value="EUR">€ Євро</option>
+          <option value="RUB">₽ Рубль</option>
+        </select>
+      </div>
+    </div>
+
+    <main>
+      <section class="card form-card">
+        <h2 data-i18n="addCarTitle">Додати авто</h2>
+        <form id="carForm">
+          <div class="field">
+            <label for="carName" data-i18n="carName">Назва авто</label>
+            <input type="text" id="carName" placeholder="Наприклад: BMW E39" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="buyPrice" data-i18n="buyPrice">Ціна покупки</label>
+              <input type="text" inputmode="decimal" id="buyPrice" placeholder="0" required>
+            </div>
+            <div class="field">
+              <label for="sellPrice" data-i18n="sellPrice">Ціна продажу</label>
+              <input type="text" inputmode="decimal" id="sellPrice" placeholder="0">
+            </div>
+          </div>
+          <div class="field checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" id="notSoldYet">
+              <span data-i18n="notSoldYet">Ще не продано (без ціни продажу)</span>
+            </label>
+          </div>
+          <div class="field">
+            <label for="carComment" data-i18n="carComment">Коментар до покупки (опціонально)</label>
+            <input type="text" id="carComment" data-i18n-placeholder="carCommentPlaceholder" placeholder="Наприклад: потрібна фарба">
+          </div>
+          <button type="submit" class="btn btn-primary" data-i18n="addCarBtn">Додати в історію</button>
+        </form>
+      </section>
+
+      <section class="card history-card">
+        <h2 data-i18n="historyTitle">Історія авто</h2>
+        <div class="table-wrap">
+          <table id="historyTable">
+            <thead>
+              <tr>
+                <th data-i18n="thName">Назва</th>
+                <th data-i18n="thBuy">Покупка</th>
+                <th data-i18n="thSell">Продаж</th>
+                <th data-i18n="thAdjust">Правки</th>
+                <th data-i18n="thProfit">Чистий плюс</th>
+                <th data-i18n="thStatus">Статус</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+          <p id="emptyMsg" class="empty-msg" data-i18n="emptyHistory">Ще немає жодного авто в цьому проекті</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="total-bar">
+      <span data-i18n="totalLabel">Загальний заробіток по проекту:</span>
+      <span id="totalSum" class="total-sum">0</span>
+    </footer>
+  </div>
+</div>
+
+<!-- Модалка правок (adjustments) -->
+<div id="adjustModal" class="modal hidden">
+  <div class="modal-content card">
+    <h2 data-i18n="adjustModalTitle">Правки до авто</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="adjDesc">Опис</th>
+            <th data-i18n="adjAmount">Сума</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="adjustBody"></tbody>
+      </table>
+    </div>
+    <form id="adjustForm" class="adjust-form">
+      <input type="text" id="adjustDesc" data-i18n-placeholder="adjDescPlaceholder" placeholder="Наприклад: покраска" required>
+      <input type="text" inputmode="decimal" id="adjustAmount" placeholder="+1000 або -500" required>
+      <button type="submit" class="btn btn-primary" data-i18n="adjAddBtn">Додати</button>
+    </form>
+
+    <h2 data-i18n="commentsTitle">Коментарі до продажу</h2>
+    <div id="commentsList" class="comments-list"></div>
+    <form id="commentForm" class="adjust-form">
+      <input type="text" id="commentInput" data-i18n-placeholder="commentPlaceholder" placeholder="Ваш коментар..." required>
+      <button type="submit" class="btn btn-primary" data-i18n="commentAddBtn">Додати</button>
+    </form>
+
+    <button class="btn btn-add-project modal-close-btn" id="closeModalBtn" data-i18n="close">Закрити</button>
   </div>
 </div>
 
