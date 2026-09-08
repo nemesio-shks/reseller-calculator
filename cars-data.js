@@ -12,6 +12,11 @@ window.CAR_CATEGORY_ICONS = {
   rv: '🚐'
 };
 
+// Order of categories from "smaller/cheaper" class to "bigger/more expensive" class
+window.CAR_CATEGORY_ORDER = [
+  'moto', 'econom', 'middle', 'premium', 'trucks', 'rv', 'water', 'air', 'rare', 'exclusive'
+];
+
 window.CARS_DB = null;
 window.CARS_FLAT_LIST = [];
 

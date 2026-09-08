@@ -1311,14 +1311,26 @@ function renderCarSuggestions(query) {
     return nameTranslit.includes(qAliased);
   });
 
-  // Sort by relevance: names starting with the query first, then alphabetically
+  // Sort hierarchically: by category (smaller/cheaper class first), then by price ascending
+  const categoryOrder = window.CAR_CATEGORY_ORDER || [];
+  const parsePrice = (priceStr) => {
+    if (!priceStr) return Infinity;
+    const num = parseFloat(priceStr.replace(/[^\d]/g, ''));
+    return isNaN(num) ? Infinity : num;
+  };
+
   filtered.sort((a, b) => {
-    const aName = normalizeSearchStr(a.name);
-    const bName = normalizeSearchStr(b.name);
-    const aStarts = aName.startsWith(q) ? 0 : 1;
-    const bStarts = bName.startsWith(q) ? 0 : 1;
-    if (aStarts !== bStarts) return aStarts - bStarts;
-    return aName.localeCompare(bName);
+    const aCatIdx = categoryOrder.indexOf(a.category);
+    const bCatIdx = categoryOrder.indexOf(b.category);
+    const aOrder = aCatIdx === -1 ? 999 : aCatIdx;
+    const bOrder = bCatIdx === -1 ? 999 : bCatIdx;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+
+    const aPrice = parsePrice(a.price);
+    const bPrice = parsePrice(b.price);
+    if (aPrice !== bPrice) return aPrice - bPrice;
+
+    return normalizeSearchStr(a.name).localeCompare(normalizeSearchStr(b.name));
   });
 
   const matches = filtered.slice(0, 40);
