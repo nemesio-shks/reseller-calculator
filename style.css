@@ -75,6 +75,15 @@ body {
   position: absolute;
   inset: 0;
   background: rgba(15, 23, 42, 0.55);
+  z-index: 1;
+}
+
+.bg-image-el {
+  position: absolute;
+  max-width: none;
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
 }
 
 .corner-logo {
@@ -635,6 +644,9 @@ tbody tr:hover {
   background: #000;
   cursor: grab;
   margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bg-editor-viewport:active {
@@ -643,10 +655,13 @@ tbody tr:hover {
 
 .bg-editor-viewport img {
   position: absolute;
-  transform: translate(-50%, -50%);
   max-width: none;
+  max-height: none;
+  width: auto;
+  height: auto;
   user-select: none;
   pointer-events: none;
+  transform-origin: center center;
 }
 
 .bg-editor-controls {

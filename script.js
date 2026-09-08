@@ -10,7 +10,7 @@ function defaultProject(name) {
 
 function defaultState() {
   const p = defaultProject('Проект 1');
-  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 50, y: 50, zoom: 100 } };
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 } };
 }
 
 let state = defaultState();
@@ -63,6 +63,7 @@ const bgEditorCancelBtn = document.getElementById('bgEditorCancelBtn');
 const bgEditorSaveBtn = document.getElementById('bgEditorSaveBtn');
 
 const bgParticles = document.getElementById('bgParticles');
+const bgImageEl = document.getElementById('bgImageEl');
 
 const adjustModal = document.getElementById('adjustModal');
 const adjustBody = document.getElementById('adjustBody');
@@ -236,7 +237,7 @@ async function loadUserData() {
   if (snap.exists() && snap.data().state && snap.data().state.projects && snap.data().state.projects.length) {
     state = snap.data().state;
     if (!state.theme) state.theme = 'dark';
-    if (!state.bgPos) state.bgPos = { x: 50, y: 50, zoom: 100 };
+    if (!state.bgPos) state.bgPos = { x: 0, y: 0, zoom: 100 };
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'UAH';
       p.cars.forEach(c => {
@@ -265,18 +266,41 @@ themeSelect.addEventListener('change', () => {
 // ---------- Background image ----------
 function applyBackground() {
   if (state.bgImage) {
-    bgLayer.style.backgroundImage = `url(${state.bgImage})`;
-    const pos = state.bgPos || { x: 50, y: 50, zoom: 100 };
-    bgLayer.style.backgroundPosition = `${pos.x}% ${pos.y}%`;
-    bgLayer.style.backgroundSize = `${pos.zoom}%`;
+    bgImageEl.src = state.bgImage;
+    bgImageEl.classList.remove('hidden');
     bgLayer.classList.add('has-custom-bg');
+
+    const pos = state.bgPos || { x: 0, y: 0, zoom: 100 };
+    const positionImg = () => {
+      const viewportRect = bgLayer.getBoundingClientRect();
+      const naturalW = bgImageEl.naturalWidth;
+      const naturalH = bgImageEl.naturalHeight;
+      if (!naturalW || !naturalH) return;
+      const baseScale = Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
+      const scale = baseScale * (pos.zoom / 100);
+      bgImageEl.style.width = naturalW + 'px';
+      bgImageEl.style.height = naturalH + 'px';
+      bgImageEl.style.left = '50%';
+      bgImageEl.style.top = '50%';
+      bgImageEl.style.transform = `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
+    };
+
+    if (bgImageEl.complete && bgImageEl.naturalWidth) {
+      positionImg();
+    } else {
+      bgImageEl.onload = positionImg;
+    }
+    window.removeEventListener('resize', bgLayerResizeHandler);
+    bgLayerResizeHandler = positionImg;
+    window.addEventListener('resize', bgLayerResizeHandler);
   } else {
-    bgLayer.style.backgroundImage = '';
-    bgLayer.style.backgroundPosition = '';
-    bgLayer.style.backgroundSize = '';
+    bgImageEl.classList.add('hidden');
+    bgImageEl.removeAttribute('src');
     bgLayer.classList.remove('has-custom-bg');
+    window.removeEventListener('resize', bgLayerResizeHandler);
   }
 }
+let bgLayerResizeHandler = () => {};
 
 bgInput.addEventListener('change', () => {
   const file = bgInput.files[0];
@@ -284,7 +308,7 @@ bgInput.addEventListener('change', () => {
   const reader = new FileReader();
   reader.onload = () => {
     state.bgImage = reader.result;
-    state.bgPos = { x: 50, y: 50, zoom: 100 };
+    state.bgPos = { x: 0, y: 0, zoom: 100 };
     applyBackground();
     scheduleSave();
     openBgEditor();
@@ -294,7 +318,7 @@ bgInput.addEventListener('change', () => {
 
 bgResetBtn.addEventListener('click', () => {
   state.bgImage = null;
-  state.bgPos = { x: 50, y: 50, zoom: 100 };
+  state.bgPos = { x: 0, y: 0, zoom: 100 };
   applyBackground();
   scheduleSave();
 });
@@ -310,22 +334,43 @@ settingsModal.addEventListener('click', (e) => {
   if (e.target === settingsModal) settingsModal.classList.add('hidden');
 });
 
-// ---------- Background editor (drag + zoom) ----------
+// ---------- Background editor (drag + zoom, preserves original aspect ratio) ----------
 let bgDragState = null;
+let bgEditorBaseScale = 1;
+let bgEditorOffsetX = 0;
+let bgEditorOffsetY = 0;
 
 function openBgEditor() {
   if (!state.bgImage) return;
+  const pos = state.bgPos || { x: 0, y: 0, zoom: 100 };
+
+  bgEditorImg.onload = () => {
+    const viewportRect = bgEditorViewport.getBoundingClientRect();
+    const naturalW = bgEditorImg.naturalWidth;
+    const naturalH = bgEditorImg.naturalHeight;
+
+    // base scale so the image fully covers the viewport (like background-size: cover) while keeping aspect ratio
+    bgEditorBaseScale = Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
+
+    bgEditorImg.style.width = naturalW + 'px';
+    bgEditorImg.style.height = naturalH + 'px';
+
+    bgZoomRange.value = pos.zoom;
+    bgEditorOffsetX = pos.x || 0;
+    bgEditorOffsetY = pos.y || 0;
+    updateBgEditorTransform();
+  };
   bgEditorImg.src = state.bgImage;
-  const pos = state.bgPos || { x: 50, y: 50, zoom: 100 };
-  bgZoomRange.value = pos.zoom;
-  applyBgEditorTransform(pos.x, pos.y, pos.zoom);
+
   bgEditorModal.classList.remove('hidden');
 }
 
-function applyBgEditorTransform(x, y, zoom) {
-  bgEditorImg.style.width = zoom + '%';
-  bgEditorImg.style.left = x + '%';
-  bgEditorImg.style.top = y + '%';
+function updateBgEditorTransform() {
+  const zoomFactor = parseFloat(bgZoomRange.value) / 100;
+  const scale = bgEditorBaseScale * zoomFactor;
+  bgEditorImg.style.transform = `translate(-50%, -50%) translate(${bgEditorOffsetX}px, ${bgEditorOffsetY}px) scale(${scale})`;
+  bgEditorImg.style.left = '50%';
+  bgEditorImg.style.top = '50%';
 }
 
 bgEditBtn.addEventListener('click', () => {
@@ -346,40 +391,31 @@ bgEditorModal.addEventListener('click', (e) => {
 
 bgEditorSaveBtn.addEventListener('click', () => {
   const zoom = parseFloat(bgZoomRange.value);
-  const left = parseFloat(bgEditorImg.style.left) || 50;
-  const top = parseFloat(bgEditorImg.style.top) || 50;
-  state.bgPos = { x: left, y: top, zoom };
+  state.bgPos = { x: bgEditorOffsetX, y: bgEditorOffsetY, zoom };
   applyBackground();
   scheduleSave();
   bgEditorModal.classList.add('hidden');
 });
 
 bgZoomRange.addEventListener('input', () => {
-  const zoom = parseFloat(bgZoomRange.value);
-  bgEditorImg.style.width = zoom + '%';
+  updateBgEditorTransform();
 });
 
 bgEditorViewport.addEventListener('mousedown', (e) => {
   e.preventDefault();
-  const rect = bgEditorViewport.getBoundingClientRect();
   bgDragState = {
     startX: e.clientX,
     startY: e.clientY,
-    startLeft: parseFloat(bgEditorImg.style.left) || 50,
-    startTop: parseFloat(bgEditorImg.style.top) || 50,
-    rectW: rect.width,
-    rectH: rect.height
+    startOffsetX: bgEditorOffsetX,
+    startOffsetY: bgEditorOffsetY
   };
 });
 
 window.addEventListener('mousemove', (e) => {
   if (!bgDragState) return;
-  const dx = ((e.clientX - bgDragState.startX) / bgDragState.rectW) * 100;
-  const dy = ((e.clientY - bgDragState.startY) / bgDragState.rectH) * 100;
-  const newLeft = Math.min(100, Math.max(0, bgDragState.startLeft + dx));
-  const newTop = Math.min(100, Math.max(0, bgDragState.startTop + dy));
-  bgEditorImg.style.left = newLeft + '%';
-  bgEditorImg.style.top = newTop + '%';
+  bgEditorOffsetX = bgDragState.startOffsetX + (e.clientX - bgDragState.startX);
+  bgEditorOffsetY = bgDragState.startOffsetY + (e.clientY - bgDragState.startY);
+  updateBgEditorTransform();
 });
 
 window.addEventListener('mouseup', () => {
@@ -389,26 +425,20 @@ window.addEventListener('mouseup', () => {
 // touch support
 bgEditorViewport.addEventListener('touchstart', (e) => {
   const touch = e.touches[0];
-  const rect = bgEditorViewport.getBoundingClientRect();
   bgDragState = {
     startX: touch.clientX,
     startY: touch.clientY,
-    startLeft: parseFloat(bgEditorImg.style.left) || 50,
-    startTop: parseFloat(bgEditorImg.style.top) || 50,
-    rectW: rect.width,
-    rectH: rect.height
+    startOffsetX: bgEditorOffsetX,
+    startOffsetY: bgEditorOffsetY
   };
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
   if (!bgDragState) return;
   const touch = e.touches[0];
-  const dx = ((touch.clientX - bgDragState.startX) / bgDragState.rectW) * 100;
-  const dy = ((touch.clientY - bgDragState.startY) / bgDragState.rectH) * 100;
-  const newLeft = Math.min(100, Math.max(0, bgDragState.startLeft + dx));
-  const newTop = Math.min(100, Math.max(0, bgDragState.startTop + dy));
-  bgEditorImg.style.left = newLeft + '%';
-  bgEditorImg.style.top = newTop + '%';
+  bgEditorOffsetX = bgDragState.startOffsetX + (touch.clientX - bgDragState.startX);
+  bgEditorOffsetY = bgDragState.startOffsetY + (touch.clientY - bgDragState.startY);
+  updateBgEditorTransform();
 }, { passive: true });
 
 window.addEventListener('touchend', () => {
