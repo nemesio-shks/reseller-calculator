@@ -373,14 +373,17 @@ body {
 
 .car-icon-cell {
   width: 56px;
+  max-width: 56px;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
   vertical-align: middle !important;
+  line-height: 0;
 }
 
 .car-history-icon {
+  display: block;
   width: 48px;
-  height: 26px;
+  height: 22px;
   border-radius: 6px;
   background-color: var(--input-bg);
   background-repeat: no-repeat;
@@ -399,7 +402,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 48px;
-  height: 26px;
+  height: 22px;
   border-radius: 6px;
   background: var(--input-bg);
   border: 1px dashed var(--input-border);

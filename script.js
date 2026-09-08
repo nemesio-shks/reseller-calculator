@@ -1218,6 +1218,61 @@ function normalizeSearchStr(s) {
   return (s || '').toLowerCase().trim();
 }
 
+// ---------- Cyrillic <-> Latin transliteration for search matching ----------
+const CYR_TO_LAT_MAP = {
+  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'ґ': 'g', 'д': 'd',
+  'е': 'e', 'є': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i',
+  'і': 'i', 'ї': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+  'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh',
+  'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+};
+
+function transliterateToLatin(str) {
+  return (str || '').toLowerCase().split('').map(ch => {
+    if (ch in CYR_TO_LAT_MAP) return CYR_TO_LAT_MAP[ch];
+    return ch;
+  }).join('');
+}
+
+function normalizeForSearch(str) {
+  // produce a latin-only, lowercase, transliterated string for loose comparison
+  return transliterateToLatin(str).replace(/[^a-z0-9]/g, '');
+}
+
+// Known brand/model name aliases (cyrillic phonetic spelling -> latin spelling used in the DB)
+const CAR_NAME_ALIASES = [
+  ['бмв', 'bmw'], ['мерседес', 'mercedes'], ['мерс', 'merc'], ['ауди', 'audi'],
+  ['фольксваген', 'volkswagen'], ['фольцваген', 'volkswagen'], ['вольво', 'volvo'],
+  ['тойота', 'toyota'], ['хонда', 'honda'], ['ниссан', 'nissan'], ['нісан', 'nissan'],
+  ['мазда', 'mazda'], ['субару', 'subaru'], ['лексус', 'lexus'], ['форд', 'ford'],
+  ['шевроле', 'chevrolet'], ['додж', 'dodge'], ['крайслер', 'chrysler'], ['джип', 'jeep'],
+  ['ламборгини', 'lamborghini'], ['ламборджини', 'lamborghini'], ['феррари', 'ferrari'],
+  ['порше', 'porsche'], ['бентли', 'bentley'], ['роллс ройс', 'rollsroyce'], ['ролс ройс', 'rollsroyce'],
+  ['майбах', 'maybach'], ['бугатти', 'bugatti'], ['мазерати', 'maserati'], ['астон мартин', 'astonmartin'],
+  ['ягуар', 'jaguar'], ['ленд ровер', 'landrover'], ['рендж ровер', 'rangerover'], ['инфинити', 'infiniti'],
+  ['киа', 'kia'], ['хендай', 'hyundai'], ['хёндай', 'hyundai'], ['шкода', 'skoda'], ['сеат', 'seat'],
+  ['опель', 'opel'], ['пежо', 'peugeot'], ['ситроен', 'citroen'], ['рено', 'renault'], ['фиат', 'fiat'],
+  ['альфа ромео', 'alfaromeo'], ['лада', 'lada'], ['ваз', 'vaz'], ['газ', 'gaz'], ['уаз', 'uaz'],
+  ['зил', 'zil'], ['москвич', 'moskvich'], ['камаз', 'kamaz'], ['джили', 'geely'], ['чери', 'chery'],
+  ['татра', 'tatra'], ['скания', 'scania'], ['ман', 'man'], ['вольво трак', 'volvotruck'],
+  ['макларен', 'mclaren'], ['пагани', 'pagani'], ['кёнигсегг', 'koenigsegg'], ['кенигсегг', 'koenigsegg'],
+  ['тесла', 'tesla'], ['кадиллак', 'cadillac'], ['бьюик', 'buick'], ['понтиак', 'pontiac'],
+  ['хаммер', 'hummer'], ['гмс', 'gmc'], ['линкольн', 'lincoln'], ['акура', 'acura'], ['датсун', 'datsun'],
+  ['мицубиси', 'mitsubishi'], ['мицубиши', 'mitsubishi'], ['сузуки', 'suzuki'], ['исузу', 'isuzu'],
+  ['дайхатсу', 'daihatsu'], ['саманд', 'samand'], ['заз', 'zaz'], ['зaз', 'zaz']
+];
+
+function applyCarNameAliases(str) {
+  let result = normalizeSearchStr(str);
+  CAR_NAME_ALIASES.forEach(([cyr, lat]) => {
+    if (result.includes(cyr)) {
+      result = result.split(cyr).join(lat);
+    }
+  });
+  return result;
+}
+
 function positionCarPreview(clientX, clientY) {
   const offset = 20;
   const previewWidth = carPreview.offsetWidth || 340;
@@ -1246,7 +1301,15 @@ function renderCarSuggestions(query) {
     return;
   }
 
-  const matches = list.filter(car => normalizeSearchStr(car.name).includes(q)).slice(0, 15);
+  const qNormalized = normalizeForSearch(q);
+  const qAliased = applyCarNameAliases(q).replace(/[^a-z0-9]/g, '');
+  const matches = list.filter(car => {
+    const nameNormalized = normalizeSearchStr(car.name);
+    if (nameNormalized.includes(q)) return true;
+    const nameTranslit = normalizeForSearch(car.name);
+    if (nameTranslit.includes(qNormalized)) return true;
+    return nameTranslit.includes(qAliased);
+  }).slice(0, 15);
   currentSuggestions = matches;
   carSuggestionIndex = -1;
 
