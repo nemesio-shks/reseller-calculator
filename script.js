@@ -10,7 +10,7 @@ function defaultProject(name) {
 
 function defaultState() {
   const p = defaultProject('Проект 1');
-  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 } };
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 }, bgType: 'video' };
 }
 
 let state = defaultState();
@@ -64,6 +64,8 @@ const bgEditorSaveBtn = document.getElementById('bgEditorSaveBtn');
 
 const bgParticles = document.getElementById('bgParticles');
 const bgImageEl = document.getElementById('bgImageEl');
+const bgVideoEl = document.getElementById('bgVideoEl');
+const bgTypeSelect = document.getElementById('bgTypeSelect');
 
 const adjustModal = document.getElementById('adjustModal');
 const adjustBody = document.getElementById('adjustBody');
@@ -238,6 +240,7 @@ async function loadUserData() {
     state = snap.data().state;
     if (!state.theme) state.theme = 'dark';
     if (!state.bgPos) state.bgPos = { x: 0, y: 0, zoom: 100 };
+    if (!state.bgType) state.bgType = 'video';
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'UAH';
       p.cars.forEach(c => {
@@ -265,7 +268,18 @@ themeSelect.addEventListener('change', () => {
 
 // ---------- Background image ----------
 function applyBackground() {
-  if (state.bgImage) {
+  const bgType = state.bgType || 'video';
+  bgTypeSelect.value = bgType;
+
+  const useVideo = bgType === 'video';
+  bgVideoEl.classList.toggle('hidden', !useVideo);
+  if (useVideo) {
+    bgVideoEl.play().catch(() => {});
+  } else {
+    bgVideoEl.pause();
+  }
+
+  if (!useVideo && state.bgImage) {
     bgImageEl.src = state.bgImage;
     bgImageEl.classList.remove('hidden');
     bgLayer.classList.add('has-custom-bg');
@@ -301,6 +315,12 @@ function applyBackground() {
   }
 }
 let bgLayerResizeHandler = () => {};
+
+bgTypeSelect.addEventListener('change', () => {
+  state.bgType = bgTypeSelect.value;
+  applyBackground();
+  scheduleSave();
+});
 
 bgInput.addEventListener('change', () => {
   const file = bgInput.files[0];
