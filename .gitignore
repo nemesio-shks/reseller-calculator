@@ -1,1 +1,6 @@
 .idea/
+/Library CARS/
+/CarsDatabase/
+/parse_cars.js
+/compress_cars.js
+

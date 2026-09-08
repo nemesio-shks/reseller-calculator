@@ -88,6 +88,9 @@ const currencySelect = document.getElementById('currencySelect');
 const notSoldYetCheckbox = document.getElementById('notSoldYet');
 const sellPriceInput = document.getElementById('sellPrice');
 const carCommentInput = document.getElementById('carComment');
+const carNameInput = document.getElementById('carName');
+const carSuggestions = document.getElementById('carSuggestions');
+const buyPriceInputEl = document.getElementById('buyPrice');
 
 const langSelect = document.getElementById('langSelect');
 const themeSelect = document.getElementById('themeSelect');
@@ -1001,6 +1004,99 @@ function initParticles() {
   }
 }
 initParticles();
+
+// ---------- Car name autocomplete (from CARS_DB) ----------
+let carSuggestionIndex = -1;
+let currentSuggestions = [];
+
+function normalizeSearchStr(s) {
+  return (s || '').toLowerCase().trim();
+}
+
+function renderCarSuggestions(query) {
+  const list = window.CARS_FLAT_LIST || [];
+  const q = normalizeSearchStr(query);
+  if (!q) {
+    carSuggestions.classList.add('hidden');
+    carSuggestions.innerHTML = '';
+    currentSuggestions = [];
+    return;
+  }
+
+  const matches = list.filter(car => normalizeSearchStr(car.name).includes(q)).slice(0, 15);
+  currentSuggestions = matches;
+  carSuggestionIndex = -1;
+
+  if (!matches.length) {
+    carSuggestions.classList.add('hidden');
+    carSuggestions.innerHTML = '';
+    return;
+  }
+
+  carSuggestions.innerHTML = matches.map((car, idx) => `
+    <div class="car-suggestion-item" data-idx="${idx}">
+      <span class="car-suggestion-icon">${car.icon}</span>
+      ${car.image ? `<img src="${car.image}" class="car-suggestion-thumb" alt="">` : ''}
+      <div class="car-suggestion-text">
+        <div class="car-suggestion-name">${escapeHtml(car.name)}</div>
+        <div class="car-suggestion-meta">${escapeHtml(car.categoryLabel)}${car.price ? ' · ' + escapeHtml(car.price) + ' ₽' : ''}</div>
+      </div>
+    </div>
+  `).join('');
+  carSuggestions.classList.remove('hidden');
+
+  carSuggestions.querySelectorAll('.car-suggestion-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.getAttribute('data-idx'), 10);
+      selectCarSuggestion(matches[idx]);
+    });
+  });
+}
+
+function selectCarSuggestion(car) {
+  carNameInput.value = car.name;
+  if (car.price) {
+    const priceNum = parseNumberInput(car.price.replace(/\./g, ''));
+    if (!isNaN(priceNum)) {
+      buyPriceInputEl.value = formatNumberPlain(priceNum);
+    }
+  }
+  carSuggestions.classList.add('hidden');
+  carSuggestions.innerHTML = '';
+}
+
+carNameInput.addEventListener('input', () => {
+  renderCarSuggestions(carNameInput.value);
+});
+
+carNameInput.addEventListener('keydown', (e) => {
+  if (carSuggestions.classList.contains('hidden') || !currentSuggestions.length) return;
+  const items = carSuggestions.querySelectorAll('.car-suggestion-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    carSuggestionIndex = Math.min(carSuggestionIndex + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === carSuggestionIndex));
+    items[carSuggestionIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    carSuggestionIndex = Math.max(carSuggestionIndex - 1, 0);
+    items.forEach((el, i) => el.classList.toggle('active', i === carSuggestionIndex));
+    items[carSuggestionIndex]?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') {
+    if (carSuggestionIndex >= 0 && currentSuggestions[carSuggestionIndex]) {
+      e.preventDefault();
+      selectCarSuggestion(currentSuggestions[carSuggestionIndex]);
+    }
+  } else if (e.key === 'Escape') {
+    carSuggestions.classList.add('hidden');
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!carSuggestions.contains(e.target) && e.target !== carNameInput) {
+    carSuggestions.classList.add('hidden');
+  }
+});
 
 // ---------- Init ----------
 async function init() {
