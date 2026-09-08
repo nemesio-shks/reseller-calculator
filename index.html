@@ -87,9 +87,10 @@
       <section class="card form-card">
         <h2 data-i18n="addCarTitle">Додати авто</h2>
         <form id="carForm">
-          <div class="field">
+          <div class="field autocomplete-field">
             <label for="carName" data-i18n="carName">Назва авто</label>
-            <input type="text" id="carName" placeholder="Наприклад: BMW E39" required>
+            <input type="text" id="carName" placeholder="Наприклад: BMW E39" autocomplete="off" required>
+            <div id="carSuggestions" class="car-suggestions hidden"></div>
           </div>
           <div class="field-row">
             <div class="field">
@@ -282,6 +283,7 @@
   </div>
 </div>
 
+<script src="cars-data.js"></script>
 <script type="module" src="firebase-init.js"></script>
 <script type="module" src="script.js"></script>
 </body>
