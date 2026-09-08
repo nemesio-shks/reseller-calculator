@@ -1,4 +1,4 @@
-import { t, getLang, setLang, applyTranslations, currencySymbols } from './i18n.js';
+import { t, getLang, setLang, applyTranslations, currencySymbols, getCategoryLabel, categoryLabels } from './i18n.js';
 
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -91,6 +91,10 @@ const carCommentInput = document.getElementById('carComment');
 const carNameInput = document.getElementById('carName');
 const carSuggestions = document.getElementById('carSuggestions');
 const buyPriceInputEl = document.getElementById('buyPrice');
+const carPreview = document.getElementById('carPreview');
+const carPreviewImg = document.getElementById('carPreviewImg');
+const carPreviewName = document.getElementById('carPreviewName');
+const categoryLegend = document.getElementById('categoryLegend');
 
 const langSelect = document.getElementById('langSelect');
 const themeSelect = document.getElementById('themeSelect');
@@ -142,6 +146,7 @@ applyTranslations();
 langSelect.addEventListener('change', () => {
   setLang(langSelect.value);
   renderAll();
+  renderCategoryLegend();
 });
 
 // ---------- Number formatting with thousand separators ----------
@@ -1039,17 +1044,30 @@ function renderCarSuggestions(query) {
       ${car.image ? `<img src="${car.image}" class="car-suggestion-thumb" alt="">` : ''}
       <div class="car-suggestion-text">
         <div class="car-suggestion-name">${escapeHtml(car.name)}</div>
-        <div class="car-suggestion-meta">${escapeHtml(car.categoryLabel)}${car.price ? ' · ' + escapeHtml(car.price) + ' ₽' : ''}</div>
+        <div class="car-suggestion-meta">${escapeHtml(getCategoryLabel(car.category))}${car.price ? ' · ' + escapeHtml(car.price) + ' ₽' : ''}</div>
       </div>
     </div>
   `).join('');
   carSuggestions.classList.remove('hidden');
 
   carSuggestions.querySelectorAll('.car-suggestion-item').forEach(el => {
+    const idx = parseInt(el.getAttribute('data-idx'), 10);
+    const car = matches[idx];
+
     el.addEventListener('click', () => {
-      const idx = parseInt(el.getAttribute('data-idx'), 10);
-      selectCarSuggestion(matches[idx]);
+      selectCarSuggestion(car);
     });
+
+    if (car.image) {
+      el.addEventListener('mouseenter', () => {
+        carPreviewImg.src = car.image;
+        carPreviewName.textContent = car.name;
+        carPreview.classList.remove('hidden');
+      });
+      el.addEventListener('mouseleave', () => {
+        carPreview.classList.add('hidden');
+      });
+    }
   });
 }
 
@@ -1063,10 +1081,24 @@ function selectCarSuggestion(car) {
   }
   carSuggestions.classList.add('hidden');
   carSuggestions.innerHTML = '';
+  carPreview.classList.add('hidden');
+}
+
+function renderCategoryLegend() {
+  const cats = window.CAR_CATEGORY_ICONS || {};
+  categoryLegend.innerHTML = Object.keys(cats).map(key =>
+    `<span class="legend-item"><span class="legend-icon">${cats[key]}</span>${escapeHtml(getCategoryLabel(key))}</span>`
+  ).join('');
 }
 
 carNameInput.addEventListener('input', () => {
   renderCarSuggestions(carNameInput.value);
+});
+
+carNameInput.addEventListener('focus', () => {
+  if (carNameInput.value.trim()) {
+    renderCarSuggestions(carNameInput.value);
+  }
 });
 
 carNameInput.addEventListener('keydown', (e) => {
@@ -1089,12 +1121,14 @@ carNameInput.addEventListener('keydown', (e) => {
     }
   } else if (e.key === 'Escape') {
     carSuggestions.classList.add('hidden');
+    carPreview.classList.add('hidden');
   }
 });
 
 document.addEventListener('click', (e) => {
   if (!carSuggestions.contains(e.target) && e.target !== carNameInput) {
     carSuggestions.classList.add('hidden');
+    carPreview.classList.add('hidden');
   }
 });
 
@@ -1120,3 +1154,8 @@ async function init() {
 }
 
 init();
+
+window.addEventListener('carsDbReady', renderCategoryLegend);
+if (window.CARS_FLAT_LIST && window.CARS_FLAT_LIST.length) {
+  renderCategoryLegend();
+}
