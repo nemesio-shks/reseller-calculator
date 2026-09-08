@@ -787,7 +787,7 @@ function renderHistory() {
   [...project.cars].reverse().forEach(car => {
     const profit = getCarProfit(car);
     const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
-    const totalCost = car.buyPrice + adjTotal;
+    const totalCost = car.buyPrice - adjTotal;
     const isSold = car.sellPrice != null;
     const tr = document.createElement('tr');
     tr.innerHTML = `
