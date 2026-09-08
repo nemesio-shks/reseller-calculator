@@ -867,6 +867,230 @@
         "price": "1.800.000",
         "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/1/11/Skoda_Octavia_VRS.png/953px-Skoda_Octavia_VRS.png 1.5x, /images/thumb/1/11/Skoda_Octavia_VRS.png/1270px-Skoda_Octavia_VRS.png 2x\"> \nNissan 370Z \nЦена: 1.800.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 72 л | Тип топлива: 95 | ID транспорта: 15191",
         "image": "assets/cars/middle/15191_Nissan 370Z.jpg"
+      },
+      {
+        "id": "15209",
+        "name": "BMW M3 E92",
+        "price": "2.500.000",
+        "info": "index.php?title=%D0%90%D0%B2%D1%82%D0%BE%D1%81%D0%B0%D0%BB%D0%BE%D0%BD_%D1%81%D1%80%D0%B5%D0%B4%D0%BD%D0%B5%D0%B3%D0%BE_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0\" title=\"Автосалон среднего класса\">1 2\n\nBMW M3 E92 \nЦена: 2.500.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 63 л | Тип топлива: 98 | ID транспорта: 15209",
+        "image": "assets/cars/middle/15209_BMW M3 E92.jpg"
+      },
+      {
+        "id": "15219",
+        "name": "Ford Mustang GT V",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/85/BMW_M3_E92.png/953px-BMW_M3_E92.png 1.5x, /images/thumb/8/85/BMW_M3_E92.png/1270px-BMW_M3_E92.png 2x\"> \nFord Mustang GT V \nЦена: 4.000.000 рублей | Максимальная скорость: 270 км/ч | Привод: задний | Объем бензобака: 61 л. | Тип топлива: 95 | ID транспорта: 15219",
+        "image": "assets/cars/middle/15219_Ford Mustang GT V.jpg"
+      },
+      {
+        "id": "15203",
+        "name": "Alfa Romeo Giulia",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/3/3d/15219veh.jpg/953px-15219veh.jpg 1.5x, /images/thumb/3/3d/15219veh.jpg/1270px-15219veh.jpg 2x\">\nAlfa Romeo Giulia \nЦена: 4.000.000 рублей | Привод: задний | Максимальная скорость: 305 км/ч | Объем бензобака: 64 л | Тип топлива: 98 | ID транспорта: 15203",
+        "image": "assets/cars/middle/15203_Alfa Romeo Giulia.jpg"
+      },
+      {
+        "id": "15240",
+        "name": "Toyota LC 100",
+        "price": "1.600.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/8c/Alfa_Romeo_Giulia.jpg/953px-Alfa_Romeo_Giulia.jpg 1.5x, /images/thumb/8/8c/Alfa_Romeo_Giulia.jpg/1270px-Alfa_Romeo_Giulia.jpg 2x\"> \nToyota LC 100 \nЦена: 1.600.000 рублей | Привод: полный | Максимальная скорость: 175 км/ч | Объем бензобака: 96 л | Тип топлива: 95 | ID транспорта: 15240",
+        "image": "assets/cars/middle/15240_Toyota LC 100.jpg"
+      },
+      {
+        "id": "15226",
+        "name": "Land Rover Defender",
+        "price": "4.800.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/5/56/Toyota_Land_Cruiser_100.png/953px-Toyota_Land_Cruiser_100.png 1.5x, /images/thumb/5/56/Toyota_Land_Cruiser_100.png/1270px-Toyota_Land_Cruiser_100.png 2x\"> \nLand Rover Defender \nЦена: 4.800.000 рублей | Привод: полный | Максимальная скорость: 200 км/ч | Объем бензобака: 90 л | Тип топлива: 95 | ID транспорта: 15226",
+        "image": "assets/cars/middle/15226_Land Rover Defender.jpg"
+      },
+      {
+        "id": "15214",
+        "name": "Chevrolet Suburban",
+        "price": "1.200.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/69/Land_Rover_Defender.png/953px-Land_Rover_Defender.png 1.5x, /images/thumb/6/69/Land_Rover_Defender.png/1270px-Land_Rover_Defender.png 2x\"> \nChevrolet Suburban \nЦена: 1.200.000 рублей | Привод: полный | Максимальная скорость: 175 км/ч | Объем бензобака: 123 л | Тип топлива: 92 | ID транспорта: 15214",
+        "image": "assets/cars/middle/15214_Chevrolet Suburban.jpg"
+      },
+      {
+        "id": "15221",
+        "name": "Jeep Gladiator",
+        "price": "6.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/5/52/Chevrolet_Suburban.png/953px-Chevrolet_Suburban.png 1.5x, /images/thumb/5/52/Chevrolet_Suburban.png/1270px-Chevrolet_Suburban.png 2x\"> \nJeep Gladiator \nЦена: 6.000.000 рублей | Привод: полный | Максимальная скорость: 186 км/ч | Объем бензобака: 85ы л | Тип топлива: 92 | ID транспорта: 15221",
+        "image": "assets/cars/middle/15221_Jeep Gladiator.jpg"
+      },
+      {
+        "id": "15220",
+        "name": "Infinity Q50",
+        "price": "2.800.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/c9/Jeep_Rubicon.png/953px-Jeep_Rubicon.png 1.5x, /images/thumb/c/c9/Jeep_Rubicon.png/1270px-Jeep_Rubicon.png 2x\"> \nInfinity Q50 \nЦена: 2.800.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 80 л | Тип топлива: 95 | ID транспорта: 15220",
+        "image": "assets/cars/middle/15220_Infinity Q50.jpg"
+      },
+      {
+        "id": "15664",
+        "name": "Mercedes S320 CDI W220",
+        "price": "700.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/1/13/Infinity_Q50.png/953px-Infinity_Q50.png 1.5x, /images/thumb/1/13/Infinity_Q50.png/1270px-Infinity_Q50.png 2x\"> \nMercedes S320 CDI W220 \nЦена: 700.000 рублей | Привод: задний | Максимальная скорость: 240 км/ч | Объем бензобака: 88 л | Тип топлива: DT | ID транспорта: 15664",
+        "image": "assets/cars/middle/15664_Mercedes S320 CDI W220.jpg"
+      },
+      {
+        "id": "15265",
+        "name": "Mercedes GL63 AMG X166",
+        "price": "3.800.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/0/06/15664veh.jpg/953px-15664veh.jpg 1.5x, /images/thumb/0/06/15664veh.jpg/1270px-15664veh.jpg 2x\"> \n\nMercedes GL63 AMG X166 \nЦена: 3.800.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 100 л. | Тип топлива: 98 | ID транспорта: 15265",
+        "image": "assets/cars/middle/15265_Mercedes GL63 AMG X166.jpg"
+      },
+      {
+        "id": "15271",
+        "name": "Nissan 400Z",
+        "price": "2.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/0/07/15265.jpg/953px-15265.jpg 1.5x, /images/thumb/0/07/15265.jpg/1270px-15265.jpg 2x\">\n\nNissan 400Z \nЦена: 2.500.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 62 л. | Тип топлива: 95 | ID транспорта: 15271",
+        "image": "assets/cars/middle/15271_Nissan 400Z.jpg"
+      },
+      {
+        "id": "15273",
+        "name": "Subaru Impreza WRX STI",
+        "price": "1.200.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/9/97/15271.jpg/953px-15271.jpg 1.5x, /images/thumb/9/97/15271.jpg/1270px-15271.jpg 2x\">\nSubaru Impreza WRX STI \nЦена: 1.200.000 рублей | Привод: полный | Максимальная скорость: 245 км/ч | Объем бензобака: 55 л | Тип топлива: 95 | ID транспорта: 15273",
+        "image": "assets/cars/middle/15273_Subaru Impreza WRX STI.jpg"
+      },
+      {
+        "id": "15274",
+        "name": "Toyota 4Runner",
+        "price": "3.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/87/15273.jpg/953px-15273.jpg 1.5x, /images/thumb/8/87/15273.jpg/1270px-15273.jpg 2x\"> \nToyota 4Runner \nЦена: 3.000.000 рублей | Привод: полный | Максимальная скорость: 180 км/ч | Объем бензобака: 87 л | Тип топлива: DT | ID транспорта: 15274",
+        "image": "assets/cars/middle/15274_Toyota 4Runner.jpg"
+      },
+      {
+        "id": "15276",
+        "name": "Volkswagen Touareg NF",
+        "price": "1.900.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/5/50/15274.jpg/953px-15274.jpg 1.5x, /images/thumb/5/50/15274.jpg/1270px-15274.jpg 2x\"> \nVolkswagen Touareg NF \nЦена: 1.900.000 рублей | Привод: полный | Максимальная скорость: 240 км/ч | Объем бензобака: 85 л | Тип топлива: 95 | ID транспорта: 15276",
+        "image": "assets/cars/middle/15276_Volkswagen Touareg NF.jpg"
+      },
+      {
+        "id": "602",
+        "name": "Lexus RC-F",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/7/77/15276veh.jpg/953px-15276veh.jpg 1.5x, /images/thumb/7/77/15276veh.jpg/1270px-15276veh.jpg 2x\"> \nLexus RC-F \nЦена: 4.000.000 рублей | Привод: задний | Максимальная скорость: 270 км/ч | Объем бензобака: 66 л. | Тип топлива: 98 | ID транспорта: 602",
+        "image": "assets/cars/middle/602_Lexus RC-F.jpg"
+      },
+      {
+        "id": "699",
+        "name": "Mini JCW GP",
+        "price": "1.700.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/e8/602.jpg/953px-602.jpg 1.5x, /images/thumb/e/e8/602.jpg/1270px-602.jpg 2x\">\nMini JCW GP \nЦена: 1.700.000 рублей | Привод: передний | Максимальная скорость: 260 км/ч | Объем бензобака: 55 л | Тип топлива: 95 | ID транспорта: 699",
+        "image": "assets/cars/middle/699_Mini JCW GP.jpg"
+      },
+      {
+        "id": "15275",
+        "name": "Toyota Tundra",
+        "price": "3.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/0/09/699.jpg/953px-699.jpg 1.5x, /images/thumb/0/09/699.jpg/1270px-699.jpg 2x\"> \nToyota Tundra \nЦена: 3.500.000 рублей | Привод: полный | Максимальная скорость: 180 км/ч | Объем бензобака: 120 л | Тип топлива: 95 | ID транспорта: 15275",
+        "image": "assets/cars/middle/15275_Toyota Tundra.jpg"
+      },
+      {
+        "id": "15602",
+        "name": "Mercedes CLS53 C257",
+        "price": "5.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/6b/15275.jpg/953px-15275.jpg 1.5x, /images/thumb/6/6b/15275.jpg/1270px-15275.jpg 2x\"> \n\nMercedes CLS53 C257 \nЦена: 5.500.000 рублей | Привод: полный | Максимальная скорость: 270 км/ч | Объем бензобака: 66 л. | Тип топлива: 95 | ID транспорта: 15602",
+        "image": "assets/cars/middle/15602_Mercedes CLS53 C257.jpg"
+      },
+      {
+        "id": "15605",
+        "name": "Hummer H2",
+        "price": "3.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/69/15602.jpg/953px-15602.jpg 1.5x, /images/thumb/6/69/15602.jpg/1270px-15602.jpg 2x\">\nHummer H2 \nЦена: 3.000.000 рублей | Привод: полный | Максимальная скорость: 175 км/ч | Объем бензобака: 121 л | Тип топлива: 92 | ID транспорта: 15605",
+        "image": "assets/cars/middle/15605_Hummer H2.jpg"
+      },
+      {
+        "id": "15619",
+        "name": "KIA K5",
+        "price": "3.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/2/2f/Hummer_H2.png/953px-Hummer_H2.png 1.5x, /images/thumb/2/2f/Hummer_H2.png/1270px-Hummer_H2.png 2x\"> \nKIA K5 \nЦена: 3.000.000 рублей | Привод: передний | Максимальная скорость: 250 км/ч | Объем бензобака: 60 л | Тип топлива: 92 | ID транспорта: 15619",
+        "image": "assets/cars/middle/15619_KIA K5.jpg"
+      },
+      {
+        "id": "15645",
+        "name": "Mercedes CLS63 AMG S219",
+        "price": "3.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/0/07/KIA_K5.png/953px-KIA_K5.png 1.5x, /images/thumb/0/07/KIA_K5.png/1270px-KIA_K5.png 2x\"> \nMercedes CLS63 AMG S219 \nЦена: 3.000.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 80 л | Тип топлива: 98 | ID транспорта: 15645",
+        "image": "assets/cars/middle/15645_Mercedes CLS63 AMG S219.jpg"
+      },
+      {
+        "id": "15651",
+        "name": "BMW 330D G20",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/4/48/Mercedes-Benz_CLS_63_W219.png/953px-Mercedes-Benz_CLS_63_W219.png 1.5x, /images/thumb/4/48/Mercedes-Benz_CLS_63_W219.png/1270px-Mercedes-Benz_CLS_63_W219.png 2x\"> \nBMW 330D G20 \nЦена: 4.000.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 59 л | Тип топлива: DT | ID транспорта: 15651",
+        "image": "assets/cars/middle/15651_BMW 330D G20.jpg"
+      },
+      {
+        "id": "15675",
+        "name": "Zeekr 001",
+        "price": "3.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/f/f5/15651.png/953px-15651.png 1.5x, /images/thumb/f/f5/15651.png/1270px-15651.png 2x\"> \nZeekr 001 \nЦена: 3.500.000 рублей | Привод: полный | Максимальная скорость: 230 км/ч | Объем бензобака: 70% | Тип топлива: электро | ID транспорта: 15675",
+        "image": "assets/cars/middle/15675_Zeekr 001.jpg"
+      },
+      {
+        "id": "15677",
+        "name": "Chevrolet Corvette C6",
+        "price": "4.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/7/7a/Car15675.png/953px-Car15675.png 1.5x, /images/thumb/7/7a/Car15675.png/1270px-Car15675.png 2x\"> \nChevrolet Corvette C6 \nЦена: 4.500.000 рублей | Привод: задний | Максимальная скорость: 295 км/ч | Объем бензобака: 59 л. | Тип топлива: 95 | ID транспорта: 15677",
+        "image": "assets/cars/middle/15677_Chevrolet Corvette C6.jpg"
+      },
+      {
+        "id": "474",
+        "name": "Volkswagen Passat B8",
+        "price": "1.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/8e/Chevrolet_Corvette_C6.jpg/953px-Chevrolet_Corvette_C6.jpg 1.5x, /images/thumb/8/8e/Chevrolet_Corvette_C6.jpg/1270px-Chevrolet_Corvette_C6.jpg 2x\"> \nVolkswagen Passat B8 \nЦена: 1.500.000 рублей | Привод: передний | Максимальная скорость: 235 км/ч | Объем бензобака: 66 л. | Тип топлива: DT | ID транспорта: 474",
+        "image": "assets/cars/middle/474_Volkswagen Passat B8.jpg"
+      },
+      {
+        "id": "15693",
+        "name": "Toyota LC 200 II",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/2/2a/Volkswagen_Passat_B8.jpg/953px-Volkswagen_Passat_B8.jpg 1.5x, /images/thumb/2/2a/Volkswagen_Passat_B8.jpg/1270px-Volkswagen_Passat_B8.jpg 2x\"> \nToyota LC 200 II \nЦена: 4.000.000 рублей | Привод: полный | Максимальная скорость: 215 км/ч | Объем бензобака: 93 л. | Тип топлива: 95 | ID транспорта: 15693",
+        "image": "assets/cars/middle/15693_Toyota LC 200 II.jpg"
+      },
+      {
+        "id": "15280",
+        "name": "Mercedes E63 AMG W211",
+        "price": "3.800.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/3/38/Toyota_LC_200_II.jpg/953px-Toyota_LC_200_II.jpg 1.5x, /images/thumb/3/38/Toyota_LC_200_II.jpg/1270px-Toyota_LC_200_II.jpg 2x\"> \nMercedes E63 AMG W211 \nЦена: 3.800.000  рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 80 л. | Тип топлива: 98 |  ID транспорта: 15280",
+        "image": "assets/cars/middle/15280_Mercedes E63 AMG W211.jpg"
+      },
+      {
+        "id": "17412",
+        "name": "Nissan 180SX",
+        "price": "1.200.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/9/95/Mercedes_E63_AMG_W211.jpg/953px-Mercedes_E63_AMG_W211.jpg 1.5x, /images/thumb/9/95/Mercedes_E63_AMG_W211.jpg/1270px-Mercedes_E63_AMG_W211.jpg 2x\">\nNissan 180SX \nЦена: 1.200.000  рублей | Максимальная скорость: 240 км/ч | Привод: задний | Объем бензобака: 60 л. | Тип топлива: 95 |  ID транспорта: 17412",
+        "image": "assets/cars/middle/17412_Nissan 180SX.jpg"
+      },
+      {
+        "id": "909",
+        "name": "Hyundai Santa Fe",
+        "price": "700.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/e6/Nissan_180SX.jpg/953px-Nissan_180SX.jpg 1.5x, /images/thumb/e/e6/Nissan_180SX.jpg/1270px-Nissan_180SX.jpg 2x\">\nHyundai Santa Fe \nЦена: 700.000 рублей | Привод: полный | Максимальная скорость: 230 км/ч | Объем бензобака: 71 л | Тип топлива: 92 | ID транспорта: 909",
+        "image": "assets/cars/middle/909_Hyundai Santa Fe.jpg"
+      },
+      {
+        "id": "15199",
+        "name": "Mercedes E500 W212",
+        "price": "4.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/b/b7/909.jpg/953px-909.jpg 1.5x, /images/thumb/b/b7/909.jpg/1270px-909.jpg 2x\"> \nMercedes E500 W212 \nЦена: 4.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 80 л | Тип топлива: 95 | ID транспорта: 15199",
+        "image": "assets/cars/middle/15199_Mercedes E500 W212.jpg"
+      },
+      {
+        "id": "15200",
+        "name": "Porshe Panamera 970",
+        "price": "5.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/84/Veh15199.jpg/953px-Veh15199.jpg 1.5x, /images/thumb/8/84/Veh15199.jpg/1270px-Veh15199.jpg 2x\"> \nPorshe Panamera 970 \nЦена: 5.000.000 рублей | Привод: передний | Максимальная скорость: 305 км/ч | Объем бензобака: 100 л | Тип топлива: 98 | ID транспорта: 15200",
+        "image": "assets/cars/middle/15200_Porshe Panamera 970.jpg"
+      },
+      {
+        "id": "15201",
+        "name": "Land Rover RR L322",
+        "price": "3.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/ec/Veh15200.jpg/953px-Veh15200.jpg 1.5x, /images/thumb/e/ec/Veh15200.jpg/1270px-Veh15200.jpg 2x\"> \nLand Rover RR L322 \nЦена: 3.000.000 рублей | Привод: полный | Максимальная скорость: 220 км/ч | Объем бензобака: 50 л | Тип топлива: 95 | ID транспорта: 15201",
+        "image": "assets/cars/middle/15201_Land Rover RR L322.jpg"
       }
     ]
   },
@@ -1502,6 +1726,279 @@
         "price": "15.000.000",
         "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/67/Audi_RSQ8.jpg/953px-Audi_RSQ8.jpg 1.5x, /images/thumb/6/67/Audi_RSQ8.jpg/1270px-Audi_RSQ8.jpg 2x\">\n\nBMW X7 G07 LCI \nЦена: 15.000.000 рублей | Привод: полный | Максимальная скорость: 300 км/ч | Объем бензобака: 85 л. | Тип топлива: 95 | ID транспорта: 15249",
         "image": "assets/cars/premium/15249_BMW X7 G07 LCI.jpg"
+      },
+      {
+        "id": "15250",
+        "name": "Bugatti Divo",
+        "price": "353.000.000",
+        "info": "2%D0%BE%D1%81%D0%B0%D0%BB%D0%BE%D0%BD_%D0%BF%D1%80%D0%B5%D0%BC%D0%B8%D1%83%D0%BC_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0\" title=\"Автосалон премиум класса\">1 2\n\n\nBugatti Divo \nЦена: 353.000.000 рублей | Привод: полный | Максимальная скорость: 380 км/ч | Объем бензобака: 100 л. | Тип топлива: 98 | ID транспорта: 15250",
+        "image": "assets/cars/premium/15250_Bugatti Divo.jpg"
+      },
+      {
+        "id": "15252",
+        "name": "Ferrari SF90",
+        "price": "75.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/c9/15250.jpg/953px-15250.jpg 1.5x, /images/thumb/c/c9/15250.jpg/1270px-15250.jpg 2x\">\n\nFerrari SF90 \nЦена: 75.000.000 рублей | Привод: полный | Максимальная скорость: 340 км/ч | Объем бензобака: 68 л. | Тип топлива: 98 | ID транспорта: 15252",
+        "image": "assets/cars/premium/15252_Ferrari SF90.jpg"
+      },
+      {
+        "id": "15259",
+        "name": "Ford GT",
+        "price": "18.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/5/5d/15252.jpg/953px-15252.jpg 1.5x, /images/thumb/5/5d/15252.jpg/1270px-15252.jpg 2x\">\n\nFord GT \nЦена: 18.000.000 рублей | Привод: задний | Максимальная скорость: 330 км/ч | Объем бензобака: 66 л. | Тип топлива: 95 | ID транспорта: 15259",
+        "image": "assets/cars/premium/15259_Ford GT.jpg"
+      },
+      {
+        "id": "15261",
+        "name": "Lamborghini Centenario",
+        "price": "164.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/65/15259.jpg/953px-15259.jpg 1.5x, /images/thumb/6/65/15259.jpg/1270px-15259.jpg 2x\">\n\nLamborghini Centenario \nЦена: 164.000.000 рублей | Привод: полный | Максимальная скорость: 350 км/ч | Объем бензобака: 90 л. | Тип топлива: 98 | ID транспорта: 15261",
+        "image": "assets/cars/premium/15261_Lamborghini Centenario.jpg"
+      },
+      {
+        "id": "15263",
+        "name": "McLaren 765LT",
+        "price": "65.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/2/2e/15261.jpg/953px-15261.jpg 1.5x, /images/thumb/2/2e/15261.jpg/1270px-15261.jpg 2x\">\n\nMcLaren 765LT \nЦена: 65.000.000 рублей | Привод: задний | Максимальная скорость: 330 км/ч | Объем бензобака: 72 л. | Тип топлива: 98 | ID транспорта: 15263",
+        "image": "assets/cars/premium/15263_McLaren 765LT.jpg"
+      },
+      {
+        "id": "15264",
+        "name": "Mercedes C63 C204 BS",
+        "price": "8.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/3/3f/15263.jpg/953px-15263.jpg 1.5x, /images/thumb/3/3f/15263.jpg/1270px-15263.jpg 2x\">\n\nMercedes C63 C204 BS \nЦена: 8.000.000 рублей | Привод: задний | Максимальная скорость: 300 км/ч | Объем бензобака: 66 л. | Тип топлива: 98 | ID транспорта: 15264",
+        "image": "assets/cars/premium/15264_Mercedes C63 C204 BS.jpg"
+      },
+      {
+        "id": "15269",
+        "name": "Mercedes S63 AMG V223",
+        "price": "20.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/7/71/Mercedes_C63_C204_BS.jpg/953px-Mercedes_C63_C204_BS.jpg 1.5x, /images/thumb/7/71/Mercedes_C63_C204_BS.jpg/1270px-Mercedes_C63_C204_BS.jpg 2x\">\n\nMercedes S63 AMG V223 \nЦена: 20.000.000 рублей | Привод: полный | Максимальная скорость: 300 км/ч | Объем бензобака: 65 л. | Тип топлива: 95 | ID транспорта: 15269",
+        "image": "assets/cars/premium/15269_Mercedes S63 AMG V223.jpg"
+      },
+      {
+        "id": "15270",
+        "name": "Mercedes S500 W223",
+        "price": "12.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/9/9c/15269.jpg/953px-15269.jpg 1.5x, /images/thumb/9/9c/15269.jpg/1270px-15269.jpg 2x\">\n\nMercedes S500 W223 \nЦена: 12.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 65 л. | Тип топлива: 95 | ID транспорта: 15270",
+        "image": "assets/cars/premium/15270_Mercedes S500 W223.jpg"
+      },
+      {
+        "id": "533",
+        "name": "Audi TT RS",
+        "price": "5.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/d/d2/15270.jpg/953px-15270.jpg 1.5x, /images/thumb/d/d2/15270.jpg/1270px-15270.jpg 2x\">\nAudi TT RS \nЦена: 5.500.000 рублей | Максимальная скорость: 280 км/ч | Привод: полный | Объем бензобака: 55 л. | Тип топлива: 98 | ID транспорта: 533",
+        "image": "assets/cars/premium/533_Audi TT RS.jpg"
+      },
+      {
+        "id": "15286",
+        "name": "Mercedes GLS 63 AMG",
+        "price": "18.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/f/f5/533.jpg/953px-533.jpg 1.5x, /images/thumb/f/f5/533.jpg/1270px-533.jpg 2x\">\n\nMercedes GLS 63 AMG \nЦена: 18.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 90 л. | Тип топлива: 95 | ID транспорта: 15286",
+        "image": "assets/cars/premium/15286_Mercedes GLS 63 AMG.jpg"
+      },
+      {
+        "id": "15284",
+        "name": "Dodge RAM TRX",
+        "price": "15.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/65/Car15286.png/953px-Car15286.png 1.5x, /images/thumb/6/65/Car15286.png/1270px-Car15286.png 2x\">\n\nDodge RAM TRX \nЦена: 15.000.000 рублей | Привод: полный | Максимальная скорость: 220 км/ч | Объем бензобака: 98 л. | Тип топлива: 98 | ID транспорта: 15284",
+        "image": "assets/cars/premium/15284_Dodge RAM TRX.jpg"
+      },
+      {
+        "id": "15288",
+        "name": "Audi Etron GT",
+        "price": "13.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/c7/15284.jpg/953px-15284.jpg 1.5x, /images/thumb/c/c7/15284.jpg/1270px-15284.jpg 2x\">\n\nAudi Etron GT \nЦена: 13.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем аккумулятора: 90% | ID транспорта: 15288",
+        "image": "assets/cars/premium/15288_Audi Etron GT.jpg"
+      },
+      {
+        "id": "15289",
+        "name": "BMW X5M F95",
+        "price": "15.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/4/47/15288.jpg/953px-15288.jpg 1.5x, /images/thumb/4/47/15288.jpg/1270px-15288.jpg 2x\">\n\nBMW X5M F95 \nЦена: 15.000.000 рублей | Привод: полный | Максимальная скорость: 290 км/ч | Объем бензобака: 83 л. | Тип топлива: 98 | ID транспорта: 15289",
+        "image": "assets/cars/premium/15289_BMW X5M F95.jpg"
+      },
+      {
+        "id": "15290",
+        "name": "Tayota LC 300",
+        "price": "12.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/d/d3/15289.jpg/953px-15289.jpg 1.5x, /images/thumb/d/d3/15289.jpg/1270px-15289.jpg 2x\">\n\nTayota LC 300 \nЦена: 12.000.000 рублей | Привод: полный | Максимальная скорость: 215 км/ч | Объем бензобака: 110 л. | Тип топлива: 95 | ID транспорта: 15290",
+        "image": "assets/cars/premium/15290_Tayota LC 300.jpg"
+      },
+      {
+        "id": "15287",
+        "name": "Rolls Royce Phantom VIII",
+        "price": "65.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/b/b6/15290.jpg/953px-15290.jpg 1.5x, /images/thumb/b/b6/15290.jpg/1270px-15290.jpg 2x\">\n\nRolls Royce Phantom VIII \nЦена: 65.000.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 110 л. | Тип топлива: 98 | ID транспорта: 15287",
+        "image": "assets/cars/premium/15287_Rolls Royce Phantom VIII.jpg"
+      },
+      {
+        "id": "15601",
+        "name": "Ferrari 512 TR",
+        "price": "20.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/c8/15287.jpg/953px-15287.jpg 1.5x, /images/thumb/c/c8/15287.jpg/1270px-15287.jpg 2x\">\n\nFerrari 512 TR \nЦена: 20.000.000 рублей | Привод: задний | Максимальная скорость: 305 км/ч | Объем бензобака: 100 л. | Тип топлива: 95 | ID транспорта: 15601",
+        "image": "assets/cars/premium/15601_Ferrari 512 TR.jpg"
+      },
+      {
+        "id": "15298",
+        "name": "Porshe 959",
+        "price": "14.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/8/85/15601.jpg/953px-15601.jpg 1.5x, /images/thumb/8/85/15601.jpg/1270px-15601.jpg 2x\">\n\nPorshe 959 \nЦена: 14.000.000 рублей | Привод: полный | Максимальная скорость: 317 км/ч | Объем бензобака: 90 л. | Тип топлива: 95 | ID транспорта: 15298",
+        "image": "assets/cars/premium/15298_Porshe 959.jpg"
+      },
+      {
+        "id": "15611",
+        "name": "Bugatti Veyron",
+        "price": "60.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/c9/15298.jpg/953px-15298.jpg 1.5x, /images/thumb/c/c9/15298.jpg/1270px-15298.jpg 2x\">\n\nBugatti Veyron \nЦена: 60.000.000 рублей | Привод: полный | Максимальная скорость: 407 км/ч | Объем бензобака: 100 л. | Тип топлива: 98 | ID транспорта: 15611",
+        "image": "assets/cars/premium/15611_Bugatti Veyron.jpg"
+      },
+      {
+        "id": "15622",
+        "name": "BMW M3 F80 CS",
+        "price": "9.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/1/11/15611.jpg/953px-15611.jpg 1.5x, /images/thumb/1/11/15611.jpg/1270px-15611.jpg 2x\">\n\nBMW M3 F80 CS \nЦена: 9.000.000 рублей | Привод: задний | Максимальная скорость: 300 км/ч | Объем бензобака: 60 л. | Тип топлива: 95 | ID транспорта: 15622",
+        "image": "assets/cars/premium/15622_BMW M3 F80 CS.jpg"
+      },
+      {
+        "id": "15626",
+        "name": "Lamborghini Sian",
+        "price": "200.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/7/7b/15622BMW.jpg/953px-15622BMW.jpg 1.5x, /images/thumb/7/7b/15622BMW.jpg/1270px-15622BMW.jpg 2x\">\n\nLamborghini Sian \nЦена: 200.000.000 рублей | Привод: полный | Максимальная скорость: 350 км/ч | Объем бензобака: 110 л. | Тип топлива: 98 | ID транспорта: 15626",
+        "image": "assets/cars/premium/15626_Lamborghini Sian.jpg"
+      },
+      {
+        "id": "15628",
+        "name": "Porsche Cayenne E3 Coupe",
+        "price": "16.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/62/15626.jpg/953px-15626.jpg 1.5x, /images/thumb/6/62/15626.jpg/1270px-15626.jpg 2x\">\n\nPorsche Cayenne E3 Coupe \nЦена: 16.000.000 рублей | Привод: полный | Максимальная скорость: 300 км/ч | Объем бензобака: 90 л. | Тип топлива: 98 | ID транспорта: 15628",
+        "image": "assets/cars/premium/15628_Porsche Cayenne E3 Coupe.jpg"
+      },
+      {
+        "id": "15630",
+        "name": "Mercedes V Class",
+        "price": "15.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/ef/15628.jpg/953px-15628.jpg 1.5x, /images/thumb/e/ef/15628.jpg/1270px-15628.jpg 2x\">\n\nMercedes V Class \nЦена: 15.000.000 рублей | Привод: задний | Максимальная скорость: 220 км/ч | Объем бензобака: 78 л. | Тип топлива: DT | ID транспорта: 15630",
+        "image": "assets/cars/premium/15630_Mercedes V Class.jpg"
+      },
+      {
+        "id": "15637",
+        "name": "Audi RS6 C8",
+        "price": "12.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/ca/15630.jpg/953px-15630.jpg 1.5x, /images/thumb/c/ca/15630.jpg/1270px-15630.jpg 2x\">\n\nAudi RS6 C8 \nЦена: 12.000.000 рублей | Привод: полный | Максимальная скорость: 300 км/ч | Объем бензобака: 73 л. | Тип топлива: 98 | ID транспорта: 15637",
+        "image": "assets/cars/premium/15637_Audi RS6 C8.jpg"
+      },
+      {
+        "id": "15640",
+        "name": "Bentley Flying Spur",
+        "price": "35.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/eb/Veh15637.jpg/953px-Veh15637.jpg 1.5x, /images/thumb/e/eb/Veh15637.jpg/1270px-Veh15637.jpg 2x\">\n\nBentley Flying Spur \nЦена: 35.000.000 рублей | Привод: полный | Максимальная скорость: 330 км/ч | Объем бензобака: 90 л. | Тип топлива: 98 | ID транспорта: 15640",
+        "image": "assets/cars/premium/15640_Bentley Flying Spur.jpg"
+      },
+      {
+        "id": "15653",
+        "name": "BMW M3 G81",
+        "price": "13.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/ca/15640.png/953px-15640.png 1.5x, /images/thumb/c/ca/15640.png/1270px-15640.png 2x\">\n\nBMW M3 G81 \nЦена: 13.000.000 рублей | Привод: полный | Максимальная скорость: 290 км/ч | Объем бензобака: 59 л. | Тип топлива: 98 | ID транспорта: 15653",
+        "image": "assets/cars/premium/15653_BMW M3 G81.jpg"
+      },
+      {
+        "id": "15652",
+        "name": "BMW 760i G70",
+        "price": "20.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/6a/15653.png/953px-15653.png 1.5x, /images/thumb/6/6a/15653.png/1270px-15653.png 2x\">\n\nBMW 760i G70 \nЦена: 20.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 74 л. | Тип топлива: 98 | ID транспорта: 15652",
+        "image": "assets/cars/premium/15652_BMW 760i G70.jpg"
+      },
+      {
+        "id": "15662",
+        "name": "Mercedes E63s A.W213 Estate",
+        "price": "15.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/6d/15652.png/953px-15652.png 1.5x, /images/thumb/6/6d/15652.png/1270px-15652.png 2x\">\n\nMercedes E63s A.W213 Estate \nЦена: 15.000.000 рублей | Привод: полный | Максимальная скорость: 300 км/ч | Объем бензобака: 100 л. | Тип топлива: 98 | ID транспорта: 15662",
+        "image": "assets/cars/premium/15662_Mercedes E63s A.W213 Estate.jpg"
+      },
+      {
+        "id": "15666",
+        "name": "BMW XM",
+        "price": "25.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/7/7e/BMWCar15662.png/953px-BMWCar15662.png 1.5x, /images/thumb/7/7e/BMWCar15662.png/1270px-BMWCar15662.png 2x\">\n\nBMW XM \nЦена: 25.000.000 рублей | Привод: полный | Максимальная скорость: 270 км/ч | Объем бензобака: 69 л. | Тип топлива: 98 | ID транспорта: 15666",
+        "image": "assets/cars/premium/15666_BMW XM.jpg"
+      },
+      {
+        "id": "15669",
+        "name": "BMW M8 GC",
+        "price": "17.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/9/96/BMWCar15666.png/953px-BMWCar15666.png 1.5x, /images/thumb/9/96/BMWCar15666.png/1270px-BMWCar15666.png 2x\">\n\nBMW M8 GC \nЦена: 17.000.000 рублей | Привод: полный | Максимальная скорость: 305 км/ч | Объем бензобака: 68 л. | Тип топлива: 98 | ID транспорта: 15669",
+        "image": "assets/cars/premium/15669_BMW M8 GC.jpg"
+      },
+      {
+        "id": "15673",
+        "name": "Ferrari 812",
+        "price": "35.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/4/4e/Car15669.png/953px-Car15669.png 1.5x, /images/thumb/4/4e/Car15669.png/1270px-Car15669.png 2x\">\n\nFerrari 812 \nЦена: 35.000.000 рублей | Привод: полный | Максимальная скорость: 340 км/ч | Объем бензобака: 92 л. | Тип топлива: 98 | ID транспорта: 15673",
+        "image": "assets/cars/premium/15673_Ferrari 812.jpg"
+      },
+      {
+        "id": "15678",
+        "name": "Maybach GLS 600 X167",
+        "price": "29.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/0/01/Car15673.png/953px-Car15673.png 1.5x, /images/thumb/0/01/Car15673.png/1270px-Car15673.png 2x\">\n\nMaybach GLS 600 X167 \nЦена: 29.000.000 рублей | Привод: полный | Максимальная скорость: 250 км/ч | Объем бензобака: 90 л. | Тип топлива: 98 | ID транспорта: 15678",
+        "image": "assets/cars/premium/15678_Maybach GLS 600 X167.jpg"
+      },
+      {
+        "id": "15690",
+        "name": "RollsRoyce Cullinan II",
+        "price": "62.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/2/21/Maybach_GLS_600_X167.jpg/953px-Maybach_GLS_600_X167.jpg 1.5x, /images/thumb/2/21/Maybach_GLS_600_X167.jpg/1270px-Maybach_GLS_600_X167.jpg 2x\">\n\nRollsRoyce Cullinan II \nЦена: 62.000.000 рублей | Привод: полный | Максимальная скорость: 260 км/ч | Объем бензобака: 100 л. | Тип топлива: 98 | ID транспорта: 15690",
+        "image": "assets/cars/premium/15690_RollsRoyce Cullinan II.jpg"
+      },
+      {
+        "id": "15613",
+        "name": "Koenigsegg Gemera",
+        "price": "125.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/f/f8/RollsRoyce_Cullinan_II.jpg/953px-RollsRoyce_Cullinan_II.jpg 1.5x, /images/thumb/f/f8/RollsRoyce_Cullinan_II.jpg/1270px-RollsRoyce_Cullinan_II.jpg 2x\">\n\nKoenigsegg Gemera \nЦена: 125.000.000 рублей | Привод: полный | Максимальная скорость: 400 км/ч | Объем бензобака: 75 л. | Тип топлива: 98 | ID транспорта: 15613",
+        "image": "assets/cars/premium/15613_Koenigsegg Gemera.jpg"
+      },
+      {
+        "id": "15205",
+        "name": "Austin Seven 24",
+        "price": "150.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/6/67/15613.jpg/953px-15613.jpg 1.5x, /images/thumb/6/67/15613.jpg/1270px-15613.jpg 2x\">\nAustin Seven 24 \nЦена: 150.000.000 рублей | Максимальная скорость: 120 км/ч | Привод: задний | Объем бензобака: 40 л. | Тип топлива: 92 | ID транспорта: 15205",
+        "image": "assets/cars/premium/15205_Austin Seven 24.jpg"
+      },
+      {
+        "id": "17415",
+        "name": "Audi S8 D4",
+        "price": "6.000.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/e/eb/Austin_Seven_24.png/953px-Austin_Seven_24.png 1.5x, /images/thumb/e/eb/Austin_Seven_24.png/1270px-Austin_Seven_24.png 2x\">\n\nAudi S8 D4 \nЦена: 6.000.000 рублей | Привод: задний | Максимальная скорость: 250 км/ч | Объем бензобака: 82 л. | Тип топлива: 98 | ID транспорта: 17415",
+        "image": "assets/cars/premium/17415_Audi S8 D4.jpg"
+      },
+      {
+        "id": "17416",
+        "name": "Mercedes GLE63S W166",
+        "price": "5.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/3/3b/Audi_S8_D4.jpg/953px-Audi_S8_D4.jpg 1.5x, /images/thumb/3/3b/Audi_S8_D4.jpg/1270px-Audi_S8_D4.jpg 2x\">\n\nMercedes GLE63S W166 \nЦена: 5.500.000 рублей | Привод: задний | Максимальная скорость: 270 км/ч | Объем бензобака: 93 л. | Тип топлива: 98 | ID транспорта: 17416",
+        "image": "assets/cars/premium/17416_Mercedes GLE63S W166.jpg"
+      },
+      {
+        "id": "17417",
+        "name": "Mercedes GLE63s C292",
+        "price": "5.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/d/df/17416.jpg/953px-17416.jpg 1.5x, /images/thumb/d/df/17416.jpg/1270px-17416.jpg 2x\">\n\nMercedes GLE63s C292 \nЦена: 5.500.000 рублей | Привод: задний | Максимальная скорость: 270 км/ч | Объем бензобака: 93 л. | Тип топлива: 98 | ID транспорта: 17417",
+        "image": "assets/cars/premium/17417_Mercedes GLE63s C292.jpg"
+      },
+      {
+        "id": "17418",
+        "name": "Mercedes GLE63s W167",
+        "price": "12.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/4/47/17417.jpg/953px-17417.jpg 1.5x, /images/thumb/4/47/17417.jpg/1270px-17417.jpg 2x\">\n\nMercedes GLE63s W167 \nЦена: 12.500.000 рублей | Привод: задний | Максимальная скорость: 290 км/ч | Объем бензобака: 85 л. | Тип топлива: 98 | ID транспорта: 17418",
+        "image": "assets/cars/premium/17418_Mercedes GLE63s W167.jpg"
+      },
+      {
+        "id": "17427",
+        "name": "Lamborghini Urus FL",
+        "price": "27.500.000",
+        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/c/cc/17418.jpg/953px-17418.jpg 1.5x, /images/thumb/c/cc/17418.jpg/1270px-17418.jpg 2x\">\nLamborghini Urus FL \nЦена: 27.500.000 рублей | Привод: задний | Максимальная скорость: 305 км/ч | Объем бензобака: 85 л. | Тип топлива: 98 | ID транспорта: 17427",
+        "image": "assets/cars/premium/17427_Lamborghini Urus FL.jpg"
       }
     ]
   },
@@ -2213,27 +2710,6 @@
         "price": null,
         "info": "href=\"https://wiki.radmir.online/index.php?title=%D0%9A%D0%B0%D0%B7%D0%B8%D0%BD%D0%BE\" title=\"Казино\">казино или на сайте radmir.online.\nПо /gps — Развлечения — Казино\n\nMercedes-Benz W126\nМаксимальная скорость: 160 км/ч | Привод: передний | Объем бензобака: 150 л. | Тип топлива: 92 | ID транспорта: 529",
         "image": "assets/cars/rare/529_Mercedes-Benz W126.jpg"
-      },
-      {
-        "id": "15091",
-        "name": "Mercedes-Benz 300 SL",
-        "price": null,
-        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/f/f0/Mercedes-Benz_S-class_W126.png/953px-Mercedes-Benz_S-class_W126.png 1.5x, /images/thumb/f/f0/Mercedes-Benz_S-class_W126.png/1270px-Mercedes-Benz_S-class_W126.png 2x\">\nMercedes-Benz 300 SL \nМаксимальная скорость: 220  км/ч | Привод: задний | Объем бензобака: 70 л. | Тип топлива: 92 | ID транспорта: 15091",
-        "image": "assets/cars/rare/15091_Mercedes-Benz 300 SL.jpg"
-      },
-      {
-        "id": "15177",
-        "name": "HUMMER H1",
-        "price": null,
-        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/3/36/Mercedes-Benz_300_SL.png/953px-Mercedes-Benz_300_SL.png 1.5x, /images/thumb/3/36/Mercedes-Benz_300_SL.png/1270px-Mercedes-Benz_300_SL.png 2x\">\nHUMMER H1\nМаксимальная скорость: 190 км/ч | Привод: полный | Объем бензобака: 95 л. | Тип топлива: DT | ID транспорта: 15177",
-        "image": "assets/cars/rare/15177_HUMMER H1.jpg"
-      },
-      {
-        "id": "15229",
-        "name": "Mercedes Benz CLK-GTR",
-        "price": null,
-        "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/f/f1/HUMMER_H1.png/953px-HUMMER_H1.png 1.5x, /images/thumb/f/f1/HUMMER_H1.png/1270px-HUMMER_H1.png 2x\">\nMercedes Benz CLK-GTR \nМаксимальная скорость: 335 км/ч | Привод: задний | Объем бензобака: 90 л. | Тип топлива: 98 | ID транспорта: 15229",
-        "image": "assets/cars/rare/15229_Mercedes Benz CLK-GTR.jpg"
       },
       {
         "id": "15293",
