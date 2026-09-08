@@ -28,6 +28,7 @@ export const translations = {
     notSoldYet: 'Ще не продано (без ціни продажу)',
     carComment: 'Коментар до покупки (опціонально)',
     carCommentPlaceholder: 'Наприклад: потрібна фарба',
+    categoryLegendTitle: 'Позначення категорій:',
     addCarBtn: 'Додати в історію',
     historyTitle: 'Історія авто',
     thName: 'Назва',
@@ -111,6 +112,7 @@ export const translations = {
     notSoldYet: 'Ещё не продано (без цены продажи)',
     carComment: 'Комментарий к покупке (опционально)',
     carCommentPlaceholder: 'Например: нужна покраска',
+    categoryLegendTitle: 'Обозначения категорий:',
     addCarBtn: 'Добавить в историю',
     historyTitle: 'История авто',
     thName: 'Название',
@@ -173,6 +175,37 @@ export const currencySymbols = {
   EUR: '€',
   RUB: '₽'
 };
+
+export const categoryLabels = {
+  uk: {
+    econom: 'Економ клас',
+    middle: 'Середній клас',
+    premium: 'Преміум клас',
+    trucks: 'Вантажний транспорт',
+    moto: 'Мото-вело салон',
+    water: 'Водний транспорт',
+    air: 'Повітряний транспорт',
+    rare: 'Рідкісні автомобілі',
+    exclusive: 'Ексклюзивні автомобілі',
+    rv: 'Дім на колесах'
+  },
+  ru: {
+    econom: 'Эконом класс',
+    middle: 'Средний класс',
+    premium: 'Премиум класс',
+    trucks: 'Грузовой транспорт',
+    moto: 'Мото-вело салон',
+    water: 'Водный транспорт',
+    air: 'Воздушный транспорт',
+    rare: 'Редкие автомобили',
+    exclusive: 'Эксклюзивные автомобили',
+    rv: 'Дом на колёсах'
+  }
+};
+
+export function getCategoryLabel(categoryKey) {
+  return (categoryLabels[currentLang] && categoryLabels[currentLang][categoryKey]) || categoryKey;
+}
 
 let currentLang = localStorage.getItem('appLang') || 'uk';
 
