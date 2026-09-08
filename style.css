@@ -97,6 +97,16 @@ body {
   user-select: none;
 }
 
+#bgCustomVideoEl.bg-video-el,
+#bgCustomGifEl.bg-video-el {
+  inset: auto;
+  width: auto;
+  height: auto;
+  object-fit: fill;
+  opacity: 1;
+  transform-origin: center center;
+}
+
 .corner-logo {
   position: fixed;
   bottom: 16px;
