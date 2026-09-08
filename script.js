@@ -1,16 +1,23 @@
+import { t, getLang, setLang, applyTranslations, currencySymbols } from './i18n.js';
+
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+function defaultProject(name) {
+  return { id: uid(), name: name || 'Проект 1', currency: 'UAH', cars: [] };
+}
+
 function defaultState() {
-  const defaultProject = { id: uid(), name: 'Проект 1', cars: [] };
-  return { activeId: defaultProject.id, projects: [defaultProject] };
+  const p = defaultProject('Проект 1');
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null };
 }
 
 let state = defaultState();
 let currentUser = null;
 let fb = null;
 let saveTimer = null;
+let activeCarIdForModal = null;
 
 const authCard = document.getElementById('authCard');
 const appContent = document.getElementById('appContent');
@@ -30,15 +37,86 @@ const historyBody = document.getElementById('historyBody');
 const emptyMsg = document.getElementById('emptyMsg');
 const totalSum = document.getElementById('totalSum');
 
+const projectNameInput = document.getElementById('projectNameInput');
+const saveProjectNameBtn = document.getElementById('saveProjectNameBtn');
+const currencySelect = document.getElementById('currencySelect');
+const notSoldYetCheckbox = document.getElementById('notSoldYet');
+const sellPriceInput = document.getElementById('sellPrice');
+const carCommentInput = document.getElementById('carComment');
+
+const langSelect = document.getElementById('langSelect');
+const themeSelect = document.getElementById('themeSelect');
+const bgInput = document.getElementById('bgInput');
+const bgResetBtn = document.getElementById('bgResetBtn');
+const bgLayer = document.getElementById('bgLayer');
+
+const adjustModal = document.getElementById('adjustModal');
+const adjustBody = document.getElementById('adjustBody');
+const adjustForm = document.getElementById('adjustForm');
+const adjustDesc = document.getElementById('adjustDesc');
+const adjustAmount = document.getElementById('adjustAmount');
+const commentsList = document.getElementById('commentsList');
+const commentForm = document.getElementById('commentForm');
+const commentInput = document.getElementById('commentInput');
+const closeModalBtn = document.getElementById('closeModalBtn');
+
 let isRegisterMode = false;
 
+// ---------- Localization ----------
+langSelect.value = getLang();
+applyTranslations();
+
+langSelect.addEventListener('change', () => {
+  setLang(langSelect.value);
+  renderAll();
+});
+
+// ---------- Number formatting with thousand separators ----------
+function parseNumberInput(str) {
+  if (typeof str !== 'string') return NaN;
+  const cleaned = str.replace(/\s/g, '').replace(',', '.');
+  return parseFloat(cleaned);
+}
+
+function attachThousandsFormatting(input) {
+  input.addEventListener('input', () => {
+    const cursorFromEnd = input.value.length - input.selectionStart;
+    let raw = input.value.replace(/[^\d.,-]/g, '');
+    input.value = raw;
+  });
+  input.addEventListener('blur', () => {
+    const num = parseNumberInput(input.value);
+    if (!isNaN(num)) {
+      input.value = formatNumberPlain(num);
+    }
+  });
+}
+
+function formatNumberPlain(n) {
+  return n.toLocaleString('uk-UA', { maximumFractionDigits: 2 });
+}
+
+[document.getElementById('buyPrice'), sellPriceInput, adjustAmount].forEach(attachThousandsFormatting);
+
+function formatMoney(n, currency) {
+  const symbol = currencySymbols[currency] || currency;
+  return n.toLocaleString('uk-UA', { maximumFractionDigits: 2 }) + ' ' + symbol;
+}
+
+// ---------- Not sold yet toggle ----------
+notSoldYetCheckbox.addEventListener('change', () => {
+  sellPriceInput.disabled = notSoldYetCheckbox.checked;
+  if (notSoldYetCheckbox.checked) sellPriceInput.value = '';
+});
+
+// ---------- Auth ----------
 authSwitchLink.addEventListener('click', (e) => {
   e.preventDefault();
   isRegisterMode = !isRegisterMode;
-  authTitle.textContent = isRegisterMode ? 'Реєстрація' : 'Вхід у кабінет';
-  authSubmitBtn.textContent = isRegisterMode ? 'Зареєструватися' : 'Увійти';
-  authSwitchText.textContent = isRegisterMode ? 'Вже маєте акаунт?' : 'Немає акаунта?';
-  authSwitchLink.textContent = isRegisterMode ? 'Увійти' : 'Зареєструватися';
+  authTitle.textContent = isRegisterMode ? t('registerTitle') : t('loginTitle');
+  authSubmitBtn.textContent = isRegisterMode ? t('registerBtn') : t('loginBtn');
+  authSwitchText.textContent = isRegisterMode ? t('haveAccount') : t('noAccount');
+  authSwitchLink.textContent = isRegisterMode ? t('loginLink') : t('registerLink');
   authError.textContent = '';
 });
 
@@ -93,12 +171,15 @@ async function waitForFirebase() {
   });
 }
 
+// ---------- State helpers ----------
 function getActiveProject() {
   return state.projects.find(p => p.id === state.activeId) || state.projects[0];
 }
 
-function formatMoney(n) {
-  return n.toLocaleString('uk-UA', { maximumFractionDigits: 2 }) + ' грн';
+function getCarProfit(car) {
+  const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
+  if (car.sellPrice == null) return null;
+  return car.sellPrice - car.buyPrice + adjTotal;
 }
 
 function escapeHtml(str) {
@@ -123,12 +204,86 @@ async function loadUserData() {
   const snap = await fb.getDoc(ref);
   if (snap.exists() && snap.data().state && snap.data().state.projects && snap.data().state.projects.length) {
     state = snap.data().state;
+    if (!state.theme) state.theme = 'dark';
+    state.projects.forEach(p => {
+      if (!p.currency) p.currency = 'UAH';
+      p.cars.forEach(c => {
+        if (!c.adjustments) c.adjustments = [];
+        if (!c.comments) c.comments = [];
+      });
+    });
   } else {
     state = defaultState();
     await saveData();
   }
 }
 
+// ---------- Theme ----------
+function applyTheme() {
+  document.body.setAttribute('data-theme', state.theme || 'dark');
+  themeSelect.value = state.theme || 'dark';
+}
+
+themeSelect.addEventListener('change', () => {
+  state.theme = themeSelect.value;
+  applyTheme();
+  scheduleSave();
+});
+
+// ---------- Background image ----------
+function applyBackground() {
+  if (state.bgImage) {
+    bgLayer.style.backgroundImage = `url(${state.bgImage})`;
+    bgLayer.classList.add('has-custom-bg');
+  } else {
+    bgLayer.style.backgroundImage = '';
+    bgLayer.classList.remove('has-custom-bg');
+  }
+}
+
+bgInput.addEventListener('change', () => {
+  const file = bgInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.bgImage = reader.result;
+    applyBackground();
+    scheduleSave();
+  };
+  reader.readAsDataURL(file);
+});
+
+bgResetBtn.addEventListener('click', () => {
+  state.bgImage = null;
+  applyBackground();
+  scheduleSave();
+});
+
+// ---------- Project name & currency ----------
+saveProjectNameBtn.addEventListener('click', () => {
+  const project = getActiveProject();
+  const name = projectNameInput.value.trim();
+  if (name) {
+    project.name = name;
+    scheduleSave();
+    renderTabs();
+  }
+});
+
+currencySelect.addEventListener('change', () => {
+  const project = getActiveProject();
+  project.currency = currencySelect.value;
+  scheduleSave();
+  renderHistory();
+});
+
+function renderProjectHeader() {
+  const project = getActiveProject();
+  projectNameInput.value = project.name;
+  currencySelect.value = project.currency || 'UAH';
+}
+
+// ---------- Tabs ----------
 function renderTabs() {
   projectsTabs.innerHTML = '';
   state.projects.forEach(p => {
@@ -152,7 +307,7 @@ function renderTabs() {
 
 function deleteProject(id) {
   if (state.projects.length <= 1) return;
-  if (!confirm('Видалити цей проект разом з історією?')) return;
+  if (!confirm(t('deleteProjectConfirm'))) return;
   state.projects = state.projects.filter(p => p.id !== id);
   if (state.activeId === id) {
     state.activeId = state.projects[0].id;
@@ -161,6 +316,17 @@ function deleteProject(id) {
   renderAll();
 }
 
+addProjectBtn.addEventListener('click', () => {
+  const name = prompt(t('newProjectPrompt'), 'Проект ' + (state.projects.length + 1));
+  if (!name) return;
+  const newProject = defaultProject(name.trim());
+  state.projects.push(newProject);
+  state.activeId = newProject.id;
+  scheduleSave();
+  renderAll();
+});
+
+// ---------- History rendering ----------
 function renderHistory() {
   const project = getActiveProject();
   historyBody.innerHTML = '';
@@ -168,20 +334,30 @@ function renderHistory() {
   emptyMsg.style.display = project.cars.length ? 'none' : 'block';
 
   [...project.cars].reverse().forEach(car => {
-    const profit = car.sellPrice - car.buyPrice;
+    const profit = getCarProfit(car);
+    const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
+    const isSold = car.sellPrice != null;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${escapeHtml(car.name)}</td>
-      <td>${formatMoney(car.buyPrice)}</td>
-      <td>${formatMoney(car.sellPrice)}</td>
-      <td class="${profit >= 0 ? 'profit-pos' : 'profit-neg'}">${profit >= 0 ? '+' : ''}${formatMoney(profit)}</td>
-      <td><span class="del-row" data-id="${car.id}">✕</span></td>
+      <td>${escapeHtml(car.name)}${car.comment ? `<div class="car-subcomment">${escapeHtml(car.comment)}</div>` : ''}</td>
+      <td>${formatMoney(car.buyPrice, project.currency)}</td>
+      <td>${isSold ? formatMoney(car.sellPrice, project.currency) : '—'}</td>
+      <td>${adjTotal ? (adjTotal >= 0 ? '+' : '') + formatMoney(adjTotal, project.currency) : '—'} <span class="link-btn" data-id="${car.id}" data-action="adjust">${t('editComment')}</span></td>
+      <td class="${profit == null ? '' : (profit >= 0 ? 'profit-pos' : 'profit-neg')}">${profit == null ? '—' : (profit >= 0 ? '+' : '') + formatMoney(profit, project.currency)}</td>
+      <td>
+        ${isSold
+          ? `<span class="status-badge status-sold">${t('statusSold')}</span>`
+          : `<span class="status-badge status-notsold">${t('statusNotSold')}</span><br><span class="link-btn" data-id="${car.id}" data-action="marksold">${t('markSold')}</span>`
+        }
+      </td>
+      <td><span class="del-row" data-id="${car.id}" data-action="delete">✕</span></td>
     `;
     historyBody.appendChild(tr);
   });
 
-  historyBody.querySelectorAll('.del-row').forEach(btn => {
+  historyBody.querySelectorAll('[data-action="delete"]').forEach(btn => {
     btn.addEventListener('click', () => {
+      if (!confirm(t('deleteCarConfirm'))) return;
       const id = btn.getAttribute('data-id');
       project.cars = project.cars.filter(c => c.id !== id);
       scheduleSave();
@@ -189,41 +365,165 @@ function renderHistory() {
     });
   });
 
-  const grandTotal = project.cars.reduce((sum, c) => sum + (c.sellPrice - c.buyPrice), 0);
-  totalSum.textContent = (grandTotal >= 0 ? '+' : '') + formatMoney(grandTotal);
-  totalSum.style.color = grandTotal >= 0 ? '#4ade80' : '#f87171';
+  historyBody.querySelectorAll('[data-action="marksold"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const car = project.cars.find(c => c.id === id);
+      const priceStr = prompt(t('sellPricePrompt'));
+      if (priceStr === null) return;
+      const price = parseNumberInput(priceStr);
+      if (isNaN(price)) return;
+      car.sellPrice = price;
+      scheduleSave();
+      renderAll();
+    });
+  });
+
+  historyBody.querySelectorAll('[data-action="adjust"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openAdjustModal(btn.getAttribute('data-id'));
+    });
+  });
+
+  const grandTotal = project.cars.reduce((sum, c) => {
+    const p = getCarProfit(c);
+    return sum + (p || 0);
+  }, 0);
+  totalSum.textContent = (grandTotal >= 0 ? '+' : '') + formatMoney(grandTotal, project.currency);
+  totalSum.style.color = grandTotal >= 0 ? 'var(--profit-pos)' : 'var(--profit-neg)';
 }
 
-function renderAll() {
-  renderTabs();
-  renderHistory();
+// ---------- Adjustments & comments modal ----------
+function openAdjustModal(carId) {
+  activeCarIdForModal = carId;
+  adjustModal.classList.remove('hidden');
+  renderModal();
 }
 
-addProjectBtn.addEventListener('click', () => {
-  const name = prompt('Назва нового проекту:', 'Проект ' + (state.projects.length + 1));
-  if (!name) return;
-  const newProject = { id: uid(), name: name.trim(), cars: [] };
-  state.projects.push(newProject);
-  state.activeId = newProject.id;
-  scheduleSave();
-  renderAll();
+function closeAdjustModal() {
+  adjustModal.classList.add('hidden');
+  activeCarIdForModal = null;
+}
+
+closeModalBtn.addEventListener('click', closeAdjustModal);
+adjustModal.addEventListener('click', (e) => {
+  if (e.target === adjustModal) closeAdjustModal();
 });
 
+function getActiveModalCar() {
+  const project = getActiveProject();
+  return project.cars.find(c => c.id === activeCarIdForModal);
+}
+
+function renderModal() {
+  const car = getActiveModalCar();
+  if (!car) return;
+  const project = getActiveProject();
+
+  adjustBody.innerHTML = '';
+  (car.adjustments || []).forEach((adj, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(adj.desc)}</td>
+      <td class="${adj.amount >= 0 ? 'profit-pos' : 'profit-neg'}">${adj.amount >= 0 ? '+' : ''}${formatMoney(adj.amount, project.currency)}</td>
+      <td><span class="del-row" data-idx="${idx}">✕</span></td>
+    `;
+    adjustBody.appendChild(tr);
+  });
+
+  adjustBody.querySelectorAll('.del-row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      car.adjustments.splice(idx, 1);
+      scheduleSave();
+      renderModal();
+      renderHistory();
+    });
+  });
+
+  commentsList.innerHTML = '';
+  (car.comments || []).forEach((c, idx) => {
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.innerHTML = `<span>${escapeHtml(c)}</span><span class="del-row" data-idx="${idx}">✕</span>`;
+    commentsList.appendChild(div);
+  });
+  commentsList.querySelectorAll('.del-row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      car.comments.splice(idx, 1);
+      scheduleSave();
+      renderModal();
+    });
+  });
+}
+
+adjustForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const car = getActiveModalCar();
+  if (!car) return;
+  const desc = adjustDesc.value.trim();
+  const amount = parseNumberInput(adjustAmount.value);
+  if (!desc || isNaN(amount)) return;
+  if (!car.adjustments) car.adjustments = [];
+  car.adjustments.push({ desc, amount });
+  scheduleSave();
+  adjustForm.reset();
+  renderModal();
+  renderHistory();
+});
+
+commentForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const car = getActiveModalCar();
+  if (!car) return;
+  const text = commentInput.value.trim();
+  if (!text) return;
+  if (!car.comments) car.comments = [];
+  car.comments.push(text);
+  scheduleSave();
+  commentForm.reset();
+  renderModal();
+});
+
+// ---------- Add car form ----------
 carForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const name = document.getElementById('carName').value.trim();
-  const buyPrice = parseFloat(document.getElementById('buyPrice').value);
-  const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+  const buyPrice = parseNumberInput(document.getElementById('buyPrice').value);
+  const comment = carCommentInput.value.trim();
+  const notSold = notSoldYetCheckbox.checked;
+  const sellPrice = notSold ? null : parseNumberInput(sellPriceInput.value);
 
-  if (!name || isNaN(buyPrice) || isNaN(sellPrice)) return;
+  if (!name || isNaN(buyPrice)) return;
+  if (!notSold && isNaN(sellPrice)) return;
 
   const project = getActiveProject();
-  project.cars.push({ id: uid(), name, buyPrice, sellPrice });
+  project.cars.push({
+    id: uid(),
+    name,
+    buyPrice,
+    sellPrice: notSold ? null : sellPrice,
+    comment,
+    adjustments: [],
+    comments: []
+  });
   scheduleSave();
   carForm.reset();
+  sellPriceInput.disabled = false;
   renderAll();
 });
 
+// ---------- Render all ----------
+function renderAll() {
+  applyTheme();
+  applyBackground();
+  renderTabs();
+  renderProjectHeader();
+  renderHistory();
+}
+
+// ---------- Init ----------
 async function init() {
   fb = await waitForFirebase();
 
