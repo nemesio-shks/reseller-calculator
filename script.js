@@ -79,6 +79,9 @@ const logoutBtn = document.getElementById('logoutBtn');
 
 const projectsTabs = document.getElementById('projectsTabs');
 const addProjectBtn = document.getElementById('addProjectBtn');
+const exportProjectBtn = document.getElementById('exportProjectBtn');
+const importProjectBtn = document.getElementById('importProjectBtn');
+const importProjectInput = document.getElementById('importProjectInput');
 const carForm = document.getElementById('carForm');
 const historyBody = document.getElementById('historyBody');
 const emptyMsg = document.getElementById('emptyMsg');
@@ -950,6 +953,73 @@ addProjectBtn.addEventListener('click', () => {
   state.activeId = newProject.id;
   scheduleSave();
   renderAll();
+});
+
+// ---------- Export / Import project preset (backup file) ----------
+exportProjectBtn.addEventListener('click', () => {
+  const project = getActiveProject();
+  const dataStr = JSON.stringify(project, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const safeName = (project.name || 'project').replace(/[\\/:*?"<>|]/g, '_');
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${safeName}_preset.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+importProjectBtn.addEventListener('click', () => {
+  importProjectInput.click();
+});
+
+importProjectInput.addEventListener('change', () => {
+  const file = importProjectInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!imported || typeof imported !== 'object' || !Array.isArray(imported.cars)) {
+        throw new Error('invalid preset structure');
+      }
+
+      const newProject = {
+        id: uid(),
+        name: imported.name || 'Імпортований проект',
+        currency: imported.currency || 'RUB',
+        cars: imported.cars.map(car => ({
+          id: uid(),
+          name: car.name || '',
+          buyPrice: typeof car.buyPrice === 'number' ? car.buyPrice : 0,
+          sellPrice: typeof car.sellPrice === 'number' ? car.sellPrice : null,
+          comment: car.comment || '',
+          adjustments: Array.isArray(car.adjustments) ? car.adjustments : [],
+          comments: Array.isArray(car.comments) ? car.comments : [],
+          image: car.image || null,
+          iconPos: car.iconPos || { x: 0, y: 0, zoom: 100 }
+        }))
+      };
+
+      state.projects.push(newProject);
+      state.activeId = newProject.id;
+      scheduleSave();
+      renderAll();
+      alert(t('importProjectSuccess'));
+    } catch (err) {
+      console.error('Помилка імпорту пресету:', err);
+      alert(t('importProjectError'));
+    }
+    importProjectInput.value = '';
+  };
+  reader.onerror = () => {
+    alert(t('importProjectError'));
+    importProjectInput.value = '';
+  };
+  reader.readAsText(file);
 });
 
 // ---------- History rendering ----------

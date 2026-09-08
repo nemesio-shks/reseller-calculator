@@ -85,6 +85,10 @@ export const translations = {
     settingsFit: 'Показ фону',
     fitCover: 'Заповнити екран',
     fitContain: 'Показати повністю',
+    exportProjectTitle: 'Зберегти пресет проекту (файл)',
+    importProjectTitle: 'Завантажити пресет проекту (файл)',
+    importProjectSuccess: 'Проект успішно завантажено з файлу.',
+    importProjectError: 'Не вдалося прочитати файл пресету. Перевірте, що це правильний файл.',
   },
   ru: {
     appTitle: 'Калькулятор перекупа',
@@ -172,6 +176,10 @@ export const translations = {
     settingsFit: 'Показ фона',
     fitCover: 'Заполнить экран',
     fitContain: 'Показать полностью',
+    exportProjectTitle: 'Сохранить пресет проекта (файл)',
+    importProjectTitle: 'Загрузить пресет проекта (файл)',
+    importProjectSuccess: 'Проект успешно загружен из файла.',
+    importProjectError: 'Не удалось прочитать файл пресета. Проверьте, что это правильный файл.',
   }
 };
 
@@ -237,6 +245,10 @@ export function applyTranslations() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');
     el.setAttribute('placeholder', t(key));
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    el.setAttribute('title', t(key));
   });
   document.documentElement.lang = currentLang;
 }
