@@ -9,6 +9,9 @@
 </head>
 <body>
 <div class="bg-layer" id="bgLayer">
+  <video id="bgVideoEl" class="bg-video-el" autoplay muted loop playsinline>
+    <source src="assets/bg-video.mp4" type="video/mp4">
+  </video>
   <div class="bg-particles" id="bgParticles"></div>
   <img id="bgImageEl" class="bg-image-el hidden" alt="">
 </div>
@@ -202,8 +205,19 @@
 
     <div class="settings-row">
       <div class="settings-row-label">
+        <span class="settings-icon">🎬</span>
+        <span data-i18n="settingsBgType">Тип фону</span>
+      </div>
+      <select id="bgTypeSelect" class="mini-select">
+        <option value="video" data-i18n="bgTypeVideo">Відео (за замовчуванням)</option>
+        <option value="image" data-i18n="bgTypeImage">Зображення</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div class="settings-row-label">
         <span class="settings-icon">🖼️</span>
-        <span data-i18n="settingsBg">Фон</span>
+        <span data-i18n="settingsBg">Фон-зображення</span>
       </div>
       <div class="settings-row-actions">
         <label class="btn btn-add-project bg-upload-btn">

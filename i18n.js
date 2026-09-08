@@ -63,6 +63,9 @@ export const translations = {
     bgEditorTitle: 'Налаштування фону',
     bgEditorHint: 'Перетягуйте фото мишкою, масштаб — повзунком',
     cancel: 'Скасувати',
+    settingsBgType: 'Тип фону',
+    bgTypeVideo: 'Відео (за замовчуванням)',
+    bgTypeImage: 'Зображення',
   },
   ru: {
     appTitle: 'Калькулятор перекупа',
@@ -128,6 +131,9 @@ export const translations = {
     bgEditorTitle: 'Настройка фона',
     bgEditorHint: 'Перетаскивайте фото мышкой, масштаб — ползунком',
     cancel: 'Отмена',
+    settingsBgType: 'Тип фона',
+    bgTypeVideo: 'Видео (по умолчанию)',
+    bgTypeImage: 'Изображение',
   }
 };
 
