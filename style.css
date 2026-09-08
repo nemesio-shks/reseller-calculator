@@ -554,3 +554,215 @@ tbody tr:hover {
 .modal-close-btn {
   width: 100%;
 }
+
+/* Icon button (settings gear) */
+.icon-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: var(--btn-secondary-hover);
+  transform: rotate(25deg);
+}
+
+/* Settings modal */
+.settings-modal-content {
+  max-width: 460px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--card-border);
+  flex-wrap: wrap;
+}
+
+.settings-row:last-of-type {
+  border-bottom: none;
+}
+
+.settings-row-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.settings-icon {
+  font-size: 18px;
+}
+
+.settings-row-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Background editor */
+.bg-editor-content {
+  max-width: 480px;
+}
+
+.bg-editor-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: -8px;
+  margin-bottom: 14px;
+}
+
+.bg-editor-viewport {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: #000;
+  cursor: grab;
+  margin-bottom: 14px;
+}
+
+.bg-editor-viewport:active {
+  cursor: grabbing;
+}
+
+.bg-editor-viewport img {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.bg-editor-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.bg-editor-controls input[type="range"] {
+  flex: 1;
+}
+
+.bg-editor-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.bg-editor-actions .btn {
+  flex: 1;
+}
+
+/* Tabs emblem & transitions */
+.tab-emblem {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-left: 4px;
+}
+
+.flying-emblem {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  z-index: 999;
+  pointer-events: none;
+  transition: transform 0.38s cubic-bezier(.4,0,.2,1), opacity 0.38s ease;
+  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.8));
+}
+
+main {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+main.tab-fade-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+main.tab-fade-in {
+  animation: tab-fade-in-anim 0.3s ease;
+}
+
+@keyframes tab-fade-in-anim {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animated default background */
+.bg-layer {
+  background-size: 300% 300% !important;
+  animation: bg-gradient-shift 18s ease infinite;
+}
+
+.bg-layer.has-custom-bg {
+  animation: none;
+  background-size: cover;
+}
+
+@keyframes bg-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-layer.has-custom-bg .bg-particles {
+  display: none;
+}
+
+.particle {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  animation-name: particle-float;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(20px);
+    opacity: 0;
+  }
+}

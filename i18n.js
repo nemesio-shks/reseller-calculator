@@ -55,6 +55,14 @@ export const translations = {
     newProjectPrompt: 'Назва нового проекту:',
     editComment: 'Правки/коментарі',
     sellPricePrompt: 'Введіть ціну продажу:',
+    settingsTitle: 'Налаштування',
+    settingsLang: 'Мова',
+    settingsTheme: 'Тема',
+    settingsBg: 'Фон',
+    bgEdit: 'Редагувати',
+    bgEditorTitle: 'Налаштування фону',
+    bgEditorHint: 'Перетягуйте фото мишкою, масштаб — повзунком',
+    cancel: 'Скасувати',
   },
   ru: {
     appTitle: 'Калькулятор перекупа',
@@ -112,6 +120,14 @@ export const translations = {
     newProjectPrompt: 'Название нового проекта:',
     editComment: 'Правки/комментарии',
     sellPricePrompt: 'Введите цену продажи:',
+    settingsTitle: 'Настройки',
+    settingsLang: 'Язык',
+    settingsTheme: 'Тема',
+    settingsBg: 'Фон',
+    bgEdit: 'Редактировать',
+    bgEditorTitle: 'Настройка фона',
+    bgEditorHint: 'Перетаскивайте фото мышкой, масштаб — ползунком',
+    cancel: 'Отмена',
   }
 };
 

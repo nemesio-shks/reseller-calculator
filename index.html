@@ -4,10 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор перекупа</title>
+<link rel="icon" type="image/png" href="assets/radmirlogo.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="bg-layer" id="bgLayer"></div>
+<div class="bg-layer" id="bgLayer">
+  <div class="bg-particles" id="bgParticles"></div>
+</div>
 
 <img src="assets/radmirlogo.png" alt="logo" class="corner-logo" id="cornerLogo">
 
@@ -15,10 +18,7 @@
   <header class="top-header">
     <h1 data-i18n="appTitle">Калькулятор перекупа</h1>
     <div class="top-controls">
-      <select id="langSelect" class="mini-select">
-        <option value="uk">UA</option>
-        <option value="ru">RU</option>
-      </select>
+      <button class="icon-btn" id="settingsBtn" title="Налаштування">⚙️</button>
     </div>
   </header>
 
@@ -49,16 +49,6 @@
         <span id="userEmailLabel"></span>
       </div>
       <div class="user-bar-right">
-        <select id="themeSelect" class="mini-select">
-          <option value="dark" data-i18n="themeDark">Темна</option>
-          <option value="light" data-i18n="themeLight">Світла</option>
-          <option value="purple" data-i18n="themePurple">Фіолетова</option>
-        </select>
-        <label class="btn btn-add-project bg-upload-btn">
-          <span data-i18n="bgBtn">Фон</span>
-          <input type="file" id="bgInput" accept="image/*" class="hidden-input">
-        </label>
-        <button class="btn btn-add-project" id="bgResetBtn" data-i18n="bgReset">Скинути фон</button>
         <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
       </div>
     </div>
@@ -178,6 +168,72 @@
     </form>
 
     <button class="btn btn-add-project modal-close-btn" id="closeModalBtn" data-i18n="close">Закрити</button>
+  </div>
+</div>
+
+<!-- Модалка налаштувань -->
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-content card settings-modal-content">
+    <h2 data-i18n="settingsTitle">Налаштування</h2>
+
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-icon">🌐</span>
+        <span data-i18n="settingsLang">Мова</span>
+      </div>
+      <select id="langSelect" class="mini-select">
+        <option value="uk">🇺🇦 Українська</option>
+        <option value="ru">🇷🇺 Русский</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-icon">🎨</span>
+        <span data-i18n="settingsTheme">Тема</span>
+      </div>
+      <select id="themeSelect" class="mini-select">
+        <option value="dark" data-i18n="themeDark">Темна</option>
+        <option value="light" data-i18n="themeLight">Світла</option>
+        <option value="purple" data-i18n="themePurple">Фіолетова</option>
+      </select>
+    </div>
+
+    <div class="settings-row">
+      <div class="settings-row-label">
+        <span class="settings-icon">🖼️</span>
+        <span data-i18n="settingsBg">Фон</span>
+      </div>
+      <div class="settings-row-actions">
+        <label class="btn btn-add-project bg-upload-btn">
+          <span data-i18n="bgBtn">Завантажити</span>
+          <input type="file" id="bgInput" accept="image/*" class="hidden-input">
+        </label>
+        <button class="btn btn-add-project" id="bgEditBtn" data-i18n="bgEdit">Редагувати</button>
+        <button class="btn btn-add-project" id="bgResetBtn" data-i18n="bgReset">Скинути</button>
+      </div>
+    </div>
+
+    <button class="btn btn-add-project modal-close-btn" id="closeSettingsBtn" data-i18n="close">Закрити</button>
+  </div>
+</div>
+
+<!-- Модалка редагування фону -->
+<div id="bgEditorModal" class="modal hidden">
+  <div class="modal-content card bg-editor-content">
+    <h2 data-i18n="bgEditorTitle">Налаштування фону</h2>
+    <p class="bg-editor-hint" data-i18n="bgEditorHint">Перетягуйте фото мишкою, масштаб — повзунком</p>
+    <div class="bg-editor-viewport" id="bgEditorViewport">
+      <img id="bgEditorImg" alt="bg preview" draggable="false">
+    </div>
+    <div class="bg-editor-controls">
+      <span class="settings-icon">🔍</span>
+      <input type="range" id="bgZoomRange" min="100" max="300" value="100" step="1">
+    </div>
+    <div class="bg-editor-actions">
+      <button class="btn btn-add-project" id="bgEditorCancelBtn" data-i18n="cancel">Скасувати</button>
+      <button class="btn btn-primary" id="bgEditorSaveBtn" data-i18n="save">Зберегти</button>
+    </div>
   </div>
 </div>
 
