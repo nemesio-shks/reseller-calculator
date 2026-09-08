@@ -63,6 +63,8 @@ let currentUser = null;
 let fb = null;
 let saveTimer = null;
 let activeCarIdForModal = null;
+let selectedCarImage = null;
+let activeCarIdForIconModal = null;
 
 const authCard = document.getElementById('authCard');
 const appContent = document.getElementById('appContent');
@@ -94,7 +96,15 @@ const buyPriceInputEl = document.getElementById('buyPrice');
 const carPreview = document.getElementById('carPreview');
 const carPreviewImg = document.getElementById('carPreviewImg');
 const carPreviewName = document.getElementById('carPreviewName');
-const categoryLegend = document.getElementById('categoryLegend');
+
+const carIconModal = document.getElementById('carIconModal');
+const carIconViewport = document.getElementById('carIconViewport');
+const carIconEditorImg = document.getElementById('carIconEditorImg');
+const carIconZoomRange = document.getElementById('carIconZoomRange');
+const carIconInput = document.getElementById('carIconInput');
+const carIconResetBtn = document.getElementById('carIconResetBtn');
+const carIconCancelBtn = document.getElementById('carIconCancelBtn');
+const carIconSaveBtn = document.getElementById('carIconSaveBtn');
 
 const langSelect = document.getElementById('langSelect');
 const themeSelect = document.getElementById('themeSelect');
@@ -146,7 +156,6 @@ applyTranslations();
 langSelect.addEventListener('change', () => {
   setLang(langSelect.value);
   renderAll();
-  renderCategoryLegend();
 });
 
 // ---------- Number formatting with thousand separators ----------
@@ -271,6 +280,14 @@ function getActiveProject() {
   return state.projects.find(p => p.id === state.activeId) || state.projects[0];
 }
 
+function carIconBgPosition(iconPos) {
+  if (!iconPos) return 'center center';
+  // Approximate: convert pixel offset to a percentage shift around center for a small thumbnail
+  const x = 50 - Math.max(-40, Math.min(40, (iconPos.x || 0) / 3));
+  const y = 50 - Math.max(-40, Math.min(40, (iconPos.y || 0) / 3));
+  return `${x}% ${y}%`;
+}
+
 function getCarProfit(car) {
   const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
   if (car.sellPrice == null) return null;
@@ -313,6 +330,8 @@ async function loadUserData() {
       p.cars.forEach(c => {
         if (!c.adjustments) c.adjustments = [];
         if (!c.comments) c.comments = [];
+        if (c.image === undefined) c.image = null;
+        if (!c.iconPos) c.iconPos = { x: 0, y: 0, zoom: 100 };
       });
     });
   } else {
@@ -764,6 +783,154 @@ function animateTabSwitch(targetTab, callback) {
   }, 380);
 }
 
+// ---------- Car icon editor (per-car, drag + zoom, custom photo upload) ----------
+let carIconDragState = null;
+let carIconBaseScale = 1;
+let carIconOffsetX = 0;
+let carIconOffsetY = 0;
+
+function getIconModalCar() {
+  const project = getActiveProject();
+  return project.cars.find(c => c.id === activeCarIdForIconModal);
+}
+
+function openCarIconModal(carId) {
+  activeCarIdForIconModal = carId;
+  const car = getIconModalCar();
+  if (!car) return;
+
+  if (!car.image) {
+    // no image yet — go straight to file picker
+    carIconInput.click();
+    return;
+  }
+
+  loadCarIconIntoEditor(car.image, car.iconPos || { x: 0, y: 0, zoom: 100 });
+  carIconModal.classList.remove('hidden');
+}
+
+function loadCarIconIntoEditor(imageSrc, pos) {
+  carIconEditorImg.onload = () => {
+    const viewportRect = carIconViewport.getBoundingClientRect();
+    const naturalW = carIconEditorImg.naturalWidth;
+    const naturalH = carIconEditorImg.naturalHeight;
+    carIconBaseScale = Math.max(viewportRect.width / naturalW, viewportRect.height / naturalH);
+
+    carIconEditorImg.style.width = naturalW + 'px';
+    carIconEditorImg.style.height = naturalH + 'px';
+
+    carIconZoomRange.value = pos.zoom;
+    carIconOffsetX = pos.x || 0;
+    carIconOffsetY = pos.y || 0;
+    updateCarIconTransform();
+  };
+  carIconEditorImg.src = imageSrc;
+}
+
+function updateCarIconTransform() {
+  const zoomFactor = parseFloat(carIconZoomRange.value) / 100;
+  const scale = carIconBaseScale * zoomFactor;
+  carIconEditorImg.style.left = '50%';
+  carIconEditorImg.style.top = '50%';
+  carIconEditorImg.style.transform = `translate(-50%, -50%) translate(${carIconOffsetX}px, ${carIconOffsetY}px) scale(${scale})`;
+}
+
+carIconInput.addEventListener('change', async () => {
+  const file = carIconInput.files[0];
+  if (!file) return;
+  const car = getIconModalCar();
+  if (!car) return;
+
+  try {
+    const compressed = await compressImageFile(file, 800, 0.8);
+    car.image = compressed;
+    car.iconPos = { x: 0, y: 0, zoom: 100 };
+    scheduleSave();
+    loadCarIconIntoEditor(car.image, car.iconPos);
+    carIconModal.classList.remove('hidden');
+    renderHistory();
+  } catch (err) {
+    console.error('Помилка обробки зображення іконки:', err);
+    alert(t('imageProcessError'));
+  }
+  carIconInput.value = '';
+});
+
+carIconResetBtn.addEventListener('click', () => {
+  const car = getIconModalCar();
+  if (!car) return;
+  car.image = null;
+  car.iconPos = { x: 0, y: 0, zoom: 100 };
+  scheduleSave();
+  carIconModal.classList.add('hidden');
+  renderHistory();
+});
+
+carIconCancelBtn.addEventListener('click', () => {
+  carIconModal.classList.add('hidden');
+});
+
+carIconModal.addEventListener('click', (e) => {
+  if (e.target === carIconModal) carIconModal.classList.add('hidden');
+});
+
+carIconSaveBtn.addEventListener('click', () => {
+  const car = getIconModalCar();
+  if (!car) return;
+  const zoom = parseFloat(carIconZoomRange.value);
+  car.iconPos = { x: carIconOffsetX, y: carIconOffsetY, zoom };
+  scheduleSave();
+  carIconModal.classList.add('hidden');
+  renderHistory();
+});
+
+carIconZoomRange.addEventListener('input', () => {
+  updateCarIconTransform();
+});
+
+carIconViewport.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  carIconDragState = {
+    startX: e.clientX,
+    startY: e.clientY,
+    startOffsetX: carIconOffsetX,
+    startOffsetY: carIconOffsetY
+  };
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!carIconDragState) return;
+  carIconOffsetX = carIconDragState.startOffsetX + (e.clientX - carIconDragState.startX);
+  carIconOffsetY = carIconDragState.startOffsetY + (e.clientY - carIconDragState.startY);
+  updateCarIconTransform();
+});
+
+window.addEventListener('mouseup', () => {
+  carIconDragState = null;
+});
+
+carIconViewport.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  carIconDragState = {
+    startX: touch.clientX,
+    startY: touch.clientY,
+    startOffsetX: carIconOffsetX,
+    startOffsetY: carIconOffsetY
+  };
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (!carIconDragState) return;
+  const touch = e.touches[0];
+  carIconOffsetX = carIconDragState.startOffsetX + (touch.clientX - carIconDragState.startX);
+  carIconOffsetY = carIconDragState.startOffsetY + (touch.clientY - carIconDragState.startY);
+  updateCarIconTransform();
+}, { passive: true });
+
+window.addEventListener('touchend', () => {
+  carIconDragState = null;
+});
+
 function deleteProject(id) {
   if (state.projects.length <= 1) return;
   if (!confirm(t('deleteProjectConfirm'))) return;
@@ -799,6 +966,12 @@ function renderHistory() {
     const isSold = car.sellPrice != null;
     const tr = document.createElement('tr');
     tr.innerHTML = `
+      <td class="car-icon-cell">
+        ${car.image
+          ? `<div class="car-history-icon" data-id="${car.id}" style="background-image:url('${car.image}'); background-position:${carIconBgPosition(car.iconPos)}; background-size:${(car.iconPos && car.iconPos.zoom) || 100}%;"></div>`
+          : `<span class="car-history-icon-empty" data-id="${car.id}" title="${t('carIconEditorTitle')}">➕</span>`
+        }
+      </td>
       <td>${escapeHtml(car.name)}${car.comment ? `<div class="car-subcomment">${escapeHtml(car.comment)}</div>` : ''}</td>
       <td>${formatMoney(car.buyPrice, project.currency)}</td>
       <td>${isSold ? formatMoney(car.sellPrice, project.currency) : '—'}</td>
@@ -821,6 +994,30 @@ function renderHistory() {
   });
 
   historyBody.querySelectorAll('.inline-sell-input').forEach(attachThousandsFormatting);
+
+  historyBody.querySelectorAll('.car-history-icon, .car-history-icon-empty').forEach(el => {
+    const id = el.getAttribute('data-id');
+    const car = project.cars.find(c => c.id === id);
+
+    el.addEventListener('click', () => {
+      openCarIconModal(id);
+    });
+
+    if (car && car.image) {
+      el.addEventListener('mouseenter', (e) => {
+        carPreviewImg.src = car.image;
+        carPreviewName.textContent = car.name;
+        carPreview.classList.remove('hidden');
+        positionCarPreview(e.clientX, e.clientY);
+      });
+      el.addEventListener('mousemove', (e) => {
+        positionCarPreview(e.clientX, e.clientY);
+      });
+      el.addEventListener('mouseleave', () => {
+        carPreview.classList.add('hidden');
+      });
+    }
+  });
 
   historyBody.querySelectorAll('[data-action="delete"]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -976,11 +1173,14 @@ carForm.addEventListener('submit', (e) => {
     sellPrice: notSold ? null : sellPrice,
     comment,
     adjustments: [],
-    comments: []
+    comments: [],
+    image: selectedCarImage || null,
+    iconPos: { x: 0, y: 0, zoom: 100 }
   });
   scheduleSave();
   carForm.reset();
   sellPriceInput.disabled = false;
+  selectedCarImage = null;
   renderAll();
 });
 
@@ -1095,6 +1295,7 @@ function renderCarSuggestions(query) {
 
 function selectCarSuggestion(car) {
   carNameInput.value = car.name;
+  selectedCarImage = car.image || null;
   if (car.price) {
     const priceNum = parseNumberInput(car.price.replace(/\./g, ''));
     if (!isNaN(priceNum)) {
@@ -1106,14 +1307,8 @@ function selectCarSuggestion(car) {
   carPreview.classList.add('hidden');
 }
 
-function renderCategoryLegend() {
-  const cats = window.CAR_CATEGORY_ICONS || {};
-  categoryLegend.innerHTML = Object.keys(cats).map(key =>
-    `<span class="legend-item"><span class="legend-icon">${cats[key]}</span>${escapeHtml(getCategoryLabel(key))}</span>`
-  ).join('');
-}
-
 carNameInput.addEventListener('input', () => {
+  selectedCarImage = null;
   renderCarSuggestions(carNameInput.value);
 });
 
@@ -1176,8 +1371,3 @@ async function init() {
 }
 
 init();
-
-window.addEventListener('carsDbReady', renderCategoryLegend);
-if (window.CARS_FLAT_LIST && window.CARS_FLAT_LIST.length) {
-  renderCategoryLegend();
-}

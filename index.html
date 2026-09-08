@@ -96,10 +96,6 @@
               <div id="carPreviewName" class="car-preview-name"></div>
             </div>
           </div>
-          <div class="category-legend-wrap">
-            <span class="category-legend-title" data-i18n="categoryLegendTitle">Позначення категорій:</span>
-            <div class="category-legend" id="categoryLegend"></div>
-          </div>
           <div class="field-row">
             <div class="field">
               <label for="buyPrice" data-i18n="buyPrice">Ціна покупки</label>
@@ -130,6 +126,7 @@
           <table id="historyTable">
             <thead>
               <tr>
+                <th></th>
                 <th data-i18n="thName">Назва</th>
                 <th data-i18n="thBuy">Покупка</th>
                 <th data-i18n="thSell">Продаж</th>
@@ -287,6 +284,30 @@
     <div class="bg-editor-actions">
       <button class="btn btn-add-project" id="bgEditorCancelBtn" data-i18n="cancel">Скасувати</button>
       <button class="btn btn-primary" id="bgEditorSaveBtn" data-i18n="save">Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка редагування іконки авто в історії -->
+<div id="carIconModal" class="modal hidden">
+  <div class="modal-content card bg-editor-content">
+    <h2 data-i18n="carIconEditorTitle">Іконка авто</h2>
+    <p class="bg-editor-hint" data-i18n="bgEditorHint">Перетягуйте фото мишкою, масштаб — повзунком</p>
+    <div class="bg-editor-viewport car-icon-viewport" id="carIconViewport">
+      <img id="carIconEditorImg" alt="icon preview" draggable="false">
+    </div>
+    <div class="bg-editor-controls">
+      <span class="settings-icon">🔍</span>
+      <input type="range" id="carIconZoomRange" min="30" max="300" value="100" step="1">
+    </div>
+    <label class="btn btn-add-project car-icon-upload-btn">
+      <span data-i18n="carIconUploadBtn">Завантажити своє фото</span>
+      <input type="file" id="carIconInput" accept="image/*" class="hidden-input">
+    </label>
+    <div class="bg-editor-actions">
+      <button class="btn btn-add-project" id="carIconResetBtn" data-i18n="carIconResetBtn">Скинути</button>
+      <button class="btn btn-add-project" id="carIconCancelBtn" data-i18n="cancel">Скасувати</button>
+      <button class="btn btn-primary" id="carIconSaveBtn" data-i18n="save">Зберегти</button>
     </div>
   </div>
 </div>
