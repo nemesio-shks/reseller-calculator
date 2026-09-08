@@ -10,7 +10,7 @@ function defaultProject(name) {
 
 function defaultState() {
   const p = defaultProject('Проект 1');
-  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null };
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 50, y: 50, zoom: 100 } };
 }
 
 let state = defaultState();
@@ -49,6 +49,20 @@ const themeSelect = document.getElementById('themeSelect');
 const bgInput = document.getElementById('bgInput');
 const bgResetBtn = document.getElementById('bgResetBtn');
 const bgLayer = document.getElementById('bgLayer');
+
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+const bgEditBtn = document.getElementById('bgEditBtn');
+
+const bgEditorModal = document.getElementById('bgEditorModal');
+const bgEditorViewport = document.getElementById('bgEditorViewport');
+const bgEditorImg = document.getElementById('bgEditorImg');
+const bgZoomRange = document.getElementById('bgZoomRange');
+const bgEditorCancelBtn = document.getElementById('bgEditorCancelBtn');
+const bgEditorSaveBtn = document.getElementById('bgEditorSaveBtn');
+
+const bgParticles = document.getElementById('bgParticles');
 
 const adjustModal = document.getElementById('adjustModal');
 const adjustBody = document.getElementById('adjustBody');
@@ -222,6 +236,7 @@ async function loadUserData() {
   if (snap.exists() && snap.data().state && snap.data().state.projects && snap.data().state.projects.length) {
     state = snap.data().state;
     if (!state.theme) state.theme = 'dark';
+    if (!state.bgPos) state.bgPos = { x: 50, y: 50, zoom: 100 };
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'UAH';
       p.cars.forEach(c => {
@@ -251,9 +266,14 @@ themeSelect.addEventListener('change', () => {
 function applyBackground() {
   if (state.bgImage) {
     bgLayer.style.backgroundImage = `url(${state.bgImage})`;
+    const pos = state.bgPos || { x: 50, y: 50, zoom: 100 };
+    bgLayer.style.backgroundPosition = `${pos.x}% ${pos.y}%`;
+    bgLayer.style.backgroundSize = `${pos.zoom}%`;
     bgLayer.classList.add('has-custom-bg');
   } else {
     bgLayer.style.backgroundImage = '';
+    bgLayer.style.backgroundPosition = '';
+    bgLayer.style.backgroundSize = '';
     bgLayer.classList.remove('has-custom-bg');
   }
 }
@@ -264,16 +284,135 @@ bgInput.addEventListener('change', () => {
   const reader = new FileReader();
   reader.onload = () => {
     state.bgImage = reader.result;
+    state.bgPos = { x: 50, y: 50, zoom: 100 };
     applyBackground();
     scheduleSave();
+    openBgEditor();
   };
   reader.readAsDataURL(file);
 });
 
 bgResetBtn.addEventListener('click', () => {
   state.bgImage = null;
+  state.bgPos = { x: 50, y: 50, zoom: 100 };
   applyBackground();
   scheduleSave();
+});
+
+// ---------- Settings modal ----------
+settingsBtn.addEventListener('click', () => {
+  settingsModal.classList.remove('hidden');
+});
+closeSettingsBtn.addEventListener('click', () => {
+  settingsModal.classList.add('hidden');
+});
+settingsModal.addEventListener('click', (e) => {
+  if (e.target === settingsModal) settingsModal.classList.add('hidden');
+});
+
+// ---------- Background editor (drag + zoom) ----------
+let bgDragState = null;
+
+function openBgEditor() {
+  if (!state.bgImage) return;
+  bgEditorImg.src = state.bgImage;
+  const pos = state.bgPos || { x: 50, y: 50, zoom: 100 };
+  bgZoomRange.value = pos.zoom;
+  applyBgEditorTransform(pos.x, pos.y, pos.zoom);
+  bgEditorModal.classList.remove('hidden');
+}
+
+function applyBgEditorTransform(x, y, zoom) {
+  bgEditorImg.style.width = zoom + '%';
+  bgEditorImg.style.left = x + '%';
+  bgEditorImg.style.top = y + '%';
+}
+
+bgEditBtn.addEventListener('click', () => {
+  if (!state.bgImage) {
+    bgInput.click();
+    return;
+  }
+  openBgEditor();
+});
+
+bgEditorCancelBtn.addEventListener('click', () => {
+  bgEditorModal.classList.add('hidden');
+});
+
+bgEditorModal.addEventListener('click', (e) => {
+  if (e.target === bgEditorModal) bgEditorModal.classList.add('hidden');
+});
+
+bgEditorSaveBtn.addEventListener('click', () => {
+  const zoom = parseFloat(bgZoomRange.value);
+  const left = parseFloat(bgEditorImg.style.left) || 50;
+  const top = parseFloat(bgEditorImg.style.top) || 50;
+  state.bgPos = { x: left, y: top, zoom };
+  applyBackground();
+  scheduleSave();
+  bgEditorModal.classList.add('hidden');
+});
+
+bgZoomRange.addEventListener('input', () => {
+  const zoom = parseFloat(bgZoomRange.value);
+  bgEditorImg.style.width = zoom + '%';
+});
+
+bgEditorViewport.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  const rect = bgEditorViewport.getBoundingClientRect();
+  bgDragState = {
+    startX: e.clientX,
+    startY: e.clientY,
+    startLeft: parseFloat(bgEditorImg.style.left) || 50,
+    startTop: parseFloat(bgEditorImg.style.top) || 50,
+    rectW: rect.width,
+    rectH: rect.height
+  };
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!bgDragState) return;
+  const dx = ((e.clientX - bgDragState.startX) / bgDragState.rectW) * 100;
+  const dy = ((e.clientY - bgDragState.startY) / bgDragState.rectH) * 100;
+  const newLeft = Math.min(100, Math.max(0, bgDragState.startLeft + dx));
+  const newTop = Math.min(100, Math.max(0, bgDragState.startTop + dy));
+  bgEditorImg.style.left = newLeft + '%';
+  bgEditorImg.style.top = newTop + '%';
+});
+
+window.addEventListener('mouseup', () => {
+  bgDragState = null;
+});
+
+// touch support
+bgEditorViewport.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const rect = bgEditorViewport.getBoundingClientRect();
+  bgDragState = {
+    startX: touch.clientX,
+    startY: touch.clientY,
+    startLeft: parseFloat(bgEditorImg.style.left) || 50,
+    startTop: parseFloat(bgEditorImg.style.top) || 50,
+    rectW: rect.width,
+    rectH: rect.height
+  };
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  if (!bgDragState) return;
+  const touch = e.touches[0];
+  const dx = ((touch.clientX - bgDragState.startX) / bgDragState.rectW) * 100;
+  const dy = ((touch.clientY - bgDragState.startY) / bgDragState.rectH) * 100;
+  const newLeft = Math.min(100, Math.max(0, bgDragState.startLeft + dx));
+  const newTop = Math.min(100, Math.max(0, bgDragState.startTop + dy));
+  bgEditorImg.style.left = newLeft + '%';
+  bgEditorImg.style.top = newTop + '%';
+}, { passive: true });
+
+window.addEventListener('touchend', () => {
+  bgDragState = null;
 });
 
 // ---------- Project name & currency ----------
@@ -307,19 +446,57 @@ function renderTabs() {
     const tab = document.createElement('div');
     tab.className = 'project-tab' + (p.id === state.activeId ? ' active' : '');
     tab.innerHTML = `<span>${escapeHtml(p.name)}</span>` +
-      (state.projects.length > 1 ? '<span class="del-project">×</span>' : '');
+      (state.projects.length > 1 ? '<span class="del-project">×</span>' : '') +
+      (p.id === state.activeId ? '<img src="assets/radmirlogo.png" class="tab-emblem" alt="">' : '');
     tab.addEventListener('click', (e) => {
       if (e.target.classList.contains('del-project')) {
         e.stopPropagation();
         deleteProject(p.id);
         return;
       }
-      state.activeId = p.id;
-      scheduleSave();
-      renderAll();
+      if (p.id === state.activeId) return;
+      animateTabSwitch(tab, () => {
+        state.activeId = p.id;
+        scheduleSave();
+        renderAll();
+      });
     });
     projectsTabs.appendChild(tab);
   });
+}
+
+function animateTabSwitch(targetTab, callback) {
+  const flyingLogo = document.createElement('img');
+  flyingLogo.src = 'assets/radmirlogo.png';
+  flyingLogo.className = 'flying-emblem';
+
+  const fromRect = projectsTabs.querySelector('.project-tab.active') || projectsTabs.firstElementChild;
+  const startRect = (fromRect || targetTab).getBoundingClientRect();
+  const endRect = targetTab.getBoundingClientRect();
+
+  flyingLogo.style.left = startRect.left + startRect.width / 2 - 12 + 'px';
+  flyingLogo.style.top = startRect.top + startRect.height / 2 - 12 + 'px';
+  document.body.appendChild(flyingLogo);
+
+  requestAnimationFrame(() => {
+    flyingLogo.style.transform = `translate(${endRect.left - startRect.left}px, ${endRect.top - startRect.top}px) scale(1.4) rotate(360deg)`;
+    flyingLogo.style.opacity = '0';
+  });
+
+  const mainCard = document.querySelector('main');
+  if (mainCard) {
+    mainCard.classList.add('tab-fade-out');
+  }
+
+  setTimeout(() => {
+    flyingLogo.remove();
+    callback();
+    if (mainCard) {
+      mainCard.classList.remove('tab-fade-out');
+      mainCard.classList.add('tab-fade-in');
+      setTimeout(() => mainCard.classList.remove('tab-fade-in'), 300);
+    }
+  }, 380);
 }
 
 function deleteProject(id) {
@@ -539,6 +716,23 @@ function renderAll() {
   renderProjectHeader();
   renderHistory();
 }
+
+// ---------- Animated background particles ----------
+function initParticles() {
+  const count = 28;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('span');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (12 + Math.random() * 18) + 's';
+    p.style.animationDelay = (Math.random() * 20) + 's';
+    bgParticles.appendChild(p);
+  }
+}
+initParticles();
 
 // ---------- Init ----------
 async function init() {
