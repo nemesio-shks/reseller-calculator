@@ -3373,6 +3373,13 @@
         "price": null,
         "info": "width=\"635\" height=\"357\" srcset=\"/images/thumb/1/11/15208vehex.jpg/953px-15208vehex.jpg 1.5x, /images/thumb/1/11/15208vehex.jpg/1270px-15208vehex.jpg 2x\">\nKIA K5 (полицейская)\nМаксимальная скорость: 250 км/ч | Привод: передний | Объем бензобака: 60 л. | Тип топлива: 95 | ID транспорта: 15620",
         "image": "assets/cars/exclusive/15620_KIA K5 (полицейская).jpg"
+      },
+      {
+        "id": "17450",
+        "name": "Volkswagen Multivan",
+        "price": null,
+        "info": "Volkswagen Multivan",
+        "image": "assets/cars/exclusive/volkswagen_multivan.jpg"
       }
     ]
   },
