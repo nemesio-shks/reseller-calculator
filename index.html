@@ -49,24 +49,6 @@
   </section>
 
   <div id="appContent" class="hidden">
-    <div class="user-bar">
-      <div class="user-bar-left">
-        <img src="assets/r_rp.png" alt="R_RP" class="brand-logo shine">
-        <span id="userEmailLabel"></span>
-        <div class="level-badge" id="levelBadge" title="">
-          <span class="level-badge-num" data-i18n="levelShort">Рівень</span>
-          <span class="level-badge-num" id="levelBadgeLevel">1</span>
-          <div class="level-badge-bar">
-            <div class="level-badge-fill" id="levelBadgeFill"></div>
-          </div>
-          <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
-        </div>
-      </div>
-      <div class="user-bar-right">
-        <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
-      </div>
-    </div>
-
     <div class="projects-bar">
       <div class="projects-tabs" id="projectsTabs"></div>
       <button class="icon-btn-sm" id="exportProjectBtn" title="Зберегти пресет проекту" data-i18n-title="exportProjectTitle">💾</button>
@@ -156,10 +138,41 @@
       </section>
     </main>
 
-    <footer class="total-bar">
-      <span data-i18n="totalLabel">Загальний заробіток по проекту:</span>
-      <span id="totalSum" class="total-sum">0</span>
+    <footer class="bottom-panel">
+      <div class="bottom-panel-account">
+        <img src="assets/r_rp.png" alt="R_RP" class="brand-logo shine">
+        <div class="bottom-panel-account-info">
+          <span id="userEmailLabel" class="bottom-panel-email"></span>
+          <div class="level-badge" id="levelBadge" title="">
+            <span class="level-badge-title" id="levelBadgeTitle">—</span>
+            <span class="level-badge-num" data-i18n="levelShort">Рівень</span>
+            <span class="level-badge-num" id="levelBadgeLevel">1</span>
+            <div class="level-badge-bar">
+              <div class="level-badge-fill" id="levelBadgeFill"></div>
+              <div class="level-badge-fill-glow" id="levelBadgeFillGlow"></div>
+            </div>
+            <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-panel-total">
+        <span data-i18n="totalLabel">Загальний заробіток по проекту:</span>
+        <span id="totalSum" class="total-sum">0</span>
+      </div>
+
+      <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
     </footer>
+  </div>
+</div>
+
+<!-- Level-up ефект -->
+<div id="levelUpOverlay" class="level-up-overlay hidden">
+  <div class="level-up-burst" id="levelUpBurst"></div>
+  <div class="level-up-card">
+    <div class="level-up-label" data-i18n="levelUpLabel">Новий рівень!</div>
+    <div class="level-up-num" id="levelUpNum">2</div>
+    <div class="level-up-title" id="levelUpTitle">Перекуп</div>
   </div>
 </div>
 
