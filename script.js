@@ -101,16 +101,18 @@ function getLevelInfo(xp) {
 }
 
 // Titles + rank color per level range (reseller "career ranks"). Easy to extend.
+// Ranges start ON the round number (e.g. 20-25 means level 20 already has the new rank),
+// not end on it (old behaviour was 16-20, i.e. round number belonged to the previous rank).
 const LEVEL_TITLES = [
-  { min: 1, max: 5, key: 'titleNovice', color: 'var(--rank-color-novice)', colorRgb: 'var(--rank-color-novice-rgb)' },
-  { min: 6, max: 10, key: 'titleReseller', color: 'var(--rank-color-reseller)', colorRgb: 'var(--rank-color-reseller-rgb)' },
-  { min: 11, max: 15, key: 'titleExperienced', color: 'var(--rank-color-experienced)', colorRgb: 'var(--rank-color-experienced-rgb)' },
-  { min: 16, max: 20, key: 'titleSkilled', color: 'var(--rank-color-skilled)', colorRgb: 'var(--rank-color-skilled-rgb)' },
-  { min: 21, max: 25, key: 'titlePro', color: 'var(--rank-color-pro)', colorRgb: 'var(--rank-color-pro-rgb)' },
-  { min: 26, max: 30, key: 'titleElite', color: 'var(--rank-color-elite)', colorRgb: 'var(--rank-color-elite-rgb)' },
-  { min: 31, max: 40, key: 'titleMaster', color: 'var(--rank-color-master)', colorRgb: 'var(--rank-color-master-rgb)' },
-  { min: 41, max: 50, key: 'titleKing', color: 'var(--rank-color-king)', colorRgb: 'var(--rank-color-king-rgb)' },
-  { min: 51, max: Infinity, key: 'titleLegend', color: 'var(--rank-color-legend)', colorRgb: 'var(--rank-color-legend-rgb)' }
+  { min: 1, max: 4, key: 'titleNovice', color: 'var(--rank-color-novice)', colorRgb: 'var(--rank-color-novice-rgb)' },
+  { min: 5, max: 9, key: 'titleReseller', color: 'var(--rank-color-reseller)', colorRgb: 'var(--rank-color-reseller-rgb)' },
+  { min: 10, max: 14, key: 'titleExperienced', color: 'var(--rank-color-experienced)', colorRgb: 'var(--rank-color-experienced-rgb)' },
+  { min: 15, max: 19, key: 'titleSkilled', color: 'var(--rank-color-skilled)', colorRgb: 'var(--rank-color-skilled-rgb)' },
+  { min: 20, max: 24, key: 'titlePro', color: 'var(--rank-color-pro)', colorRgb: 'var(--rank-color-pro-rgb)' },
+  { min: 25, max: 29, key: 'titleElite', color: 'var(--rank-color-elite)', colorRgb: 'var(--rank-color-elite-rgb)' },
+  { min: 30, max: 39, key: 'titleMaster', color: 'var(--rank-color-master)', colorRgb: 'var(--rank-color-master-rgb)' },
+  { min: 40, max: 49, key: 'titleKing', color: 'var(--rank-color-king)', colorRgb: 'var(--rank-color-king-rgb)' },
+  { min: 50, max: Infinity, key: 'titleLegend', color: 'var(--rank-color-legend)', colorRgb: 'var(--rank-color-legend-rgb)' }
 ];
 
 function getLevelRankEntry(level) {
