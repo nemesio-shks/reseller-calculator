@@ -100,18 +100,81 @@ function getLevelInfo(xp) {
   return { level, xp, currentLevelXp, nextLevelXp, xpIntoLevel, xpNeededForLevel, progress };
 }
 
-function awardSaleXp(profit) {
-  state.xp = (state.xp || 0) + calcSaleXp(profit);
-  renderLevelBadge();
+// Titles per level range (reseller "career ranks"). Easy to extend.
+const LEVEL_TITLES = [
+  { min: 1, max: 5, key: 'titleNovice' },
+  { min: 6, max: 10, key: 'titleReseller' },
+  { min: 11, max: 15, key: 'titleExperienced' },
+  { min: 16, max: 20, key: 'titleSkilled' },
+  { min: 21, max: 25, key: 'titlePro' },
+  { min: 26, max: 30, key: 'titleElite' },
+  { min: 31, max: 40, key: 'titleMaster' },
+  { min: 41, max: 50, key: 'titleKing' },
+  { min: 51, max: Infinity, key: 'titleLegend' }
+];
+
+function getLevelTitle(level) {
+  const entry = LEVEL_TITLES.find(r => level >= r.min && level <= r.max) || LEVEL_TITLES[LEVEL_TITLES.length - 1];
+  return t(entry.key);
 }
 
-function renderLevelBadge() {
+function awardSaleXp(profit) {
+  const prevLevel = levelFromXp(state.xp || 0);
+  state.xp = (state.xp || 0) + calcSaleXp(profit);
+  const newLevel = levelFromXp(state.xp);
+  renderLevelBadge({ pulse: true });
+  if (newLevel > prevLevel) {
+    playLevelUpEffect(newLevel);
+  }
+}
+
+function renderLevelBadge(opts) {
   if (!levelBadge) return;
   const info = getLevelInfo(state.xp || 0);
   levelBadgeLevel.textContent = info.level;
   levelBadgeFill.style.width = (info.progress * 100) + '%';
   levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
-  levelBadge.title = `${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
+  levelBadgeTitle.textContent = getLevelTitle(info.level);
+  levelBadge.title = `${getLevelTitle(info.level)} — ${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
+
+  if (opts && opts.pulse) {
+    levelBadge.classList.remove('level-badge-pulse');
+    // force reflow so the animation can restart
+    void levelBadge.offsetWidth;
+    levelBadge.classList.add('level-badge-pulse');
+    levelBadgeFillGlow.classList.remove('level-badge-fill-glow-anim');
+    void levelBadgeFillGlow.offsetWidth;
+    levelBadgeFillGlow.classList.add('level-badge-fill-glow-anim');
+  }
+}
+
+function playLevelUpEffect(newLevel) {
+  levelUpNum.textContent = newLevel;
+  levelUpTitle.textContent = getLevelTitle(newLevel);
+  levelUpBurst.innerHTML = '';
+  const particleCount = 24;
+  for (let i = 0; i < particleCount; i++) {
+    const p = document.createElement('span');
+    p.className = 'level-up-particle';
+    const angle = (360 / particleCount) * i + (Math.random() * 12 - 6);
+    const dist = 120 + Math.random() * 100;
+    const rad = (angle * Math.PI) / 180;
+    p.style.setProperty('--dx', (Math.cos(rad) * dist).toFixed(1) + 'px');
+    p.style.setProperty('--dy', (Math.sin(rad) * dist).toFixed(1) + 'px');
+    p.style.background = i % 3 === 0 ? 'var(--accent)' : (i % 3 === 1 ? '#ffd54a' : '#ffffff');
+    p.style.animationDelay = (Math.random() * 0.15) + 's';
+    levelUpBurst.appendChild(p);
+  }
+
+  levelUpOverlay.classList.remove('hidden');
+  levelUpOverlay.classList.remove('level-up-overlay-anim');
+  void levelUpOverlay.offsetWidth;
+  levelUpOverlay.classList.add('level-up-overlay-anim');
+
+  setTimeout(() => {
+    levelUpOverlay.classList.add('hidden');
+    levelUpOverlay.classList.remove('level-up-overlay-anim');
+  }, 2600);
 }
 
 let state = defaultState();
@@ -168,7 +231,14 @@ const carIconSaveBtn = document.getElementById('carIconSaveBtn');
 const levelBadge = document.getElementById('levelBadge');
 const levelBadgeLevel = document.getElementById('levelBadgeLevel');
 const levelBadgeFill = document.getElementById('levelBadgeFill');
+const levelBadgeFillGlow = document.getElementById('levelBadgeFillGlow');
 const levelBadgeXpText = document.getElementById('levelBadgeXpText');
+const levelBadgeTitle = document.getElementById('levelBadgeTitle');
+
+const levelUpOverlay = document.getElementById('levelUpOverlay');
+const levelUpBurst = document.getElementById('levelUpBurst');
+const levelUpNum = document.getElementById('levelUpNum');
+const levelUpTitle = document.getElementById('levelUpTitle');
 
 const langSelect = document.getElementById('langSelect');
 const themeSelect = document.getElementById('themeSelect');

@@ -92,6 +92,16 @@ export const translations = {
     importProjectError: 'Не вдалося прочитати файл пресету. Перевірте, що це правильний файл.',
     levelShort: 'Рівень',
     levelLabel: 'Рівень',
+    levelUpLabel: 'Новий рівень!',
+    titleNovice: 'Новачок-перекуп',
+    titleReseller: 'Перекуп',
+    titleExperienced: 'Досвідчений перекуп',
+    titleSkilled: 'Вправний перекуп',
+    titlePro: 'Профі-перекуп',
+    titleElite: 'Елітний перекуп',
+    titleMaster: 'Майстер перекупу',
+    titleKing: 'Король перекупу',
+    titleLegend: 'Легенда автобізнесу',
   },
   ru: {
     appTitle: 'Калькулятор перекупа',
@@ -186,6 +196,16 @@ export const translations = {
     importProjectError: 'Не удалось прочитать файл пресета. Проверьте, что это правильный файл.',
     levelShort: 'Уровень',
     levelLabel: 'Уровень',
+    levelUpLabel: 'Новый уровень!',
+    titleNovice: 'Новичок-перекуп',
+    titleReseller: 'Перекуп',
+    titleExperienced: 'Опытный перекуп',
+    titleSkilled: 'Умелый перекуп',
+    titlePro: 'Профи-перекуп',
+    titleElite: 'Элитный перекуп',
+    titleMaster: 'Мастер перекупа',
+    titleKing: 'Король перекупа',
+    titleLegend: 'Легенда автобизнеса',
   }
 };
 
