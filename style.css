@@ -813,14 +813,23 @@ body[data-theme="purple"] .date-input {
 /* Rank color per level range, mirrors LEVEL_TITLES in script.js */
 :root {
   --rank-color-novice: #94a3b8;
+  --rank-color-novice-rgb: 148, 163, 184;
   --rank-color-reseller: #22c55e;
+  --rank-color-reseller-rgb: 34, 197, 94;
   --rank-color-experienced: #3b82f6;
+  --rank-color-experienced-rgb: 59, 130, 246;
   --rank-color-skilled: #06b6d4;
+  --rank-color-skilled-rgb: 6, 182, 212;
   --rank-color-pro: #a855f7;
+  --rank-color-pro-rgb: 168, 85, 247;
   --rank-color-elite: #ec4899;
+  --rank-color-elite-rgb: 236, 72, 153;
   --rank-color-master: #f97316;
+  --rank-color-master-rgb: 249, 115, 22;
   --rank-color-king: #eab308;
+  --rank-color-king-rgb: 234, 179, 8;
   --rank-color-legend: #facc15;
+  --rank-color-legend-rgb: 250, 204, 21;
 }
 
 .level-badge {
@@ -901,9 +910,9 @@ body[data-theme="purple"] .date-input {
 }
 
 @keyframes level-circle-pulse-anim {
-  0% { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 0 rgba(var(--accent-rgb), 0.6)); }
+  0% { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 0 rgba(var(--rank-color-rgb, var(--accent-rgb)), 0.6)); }
   50% { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 14px var(--rank-color, var(--accent))); }
-  100% { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 0 rgba(var(--accent-rgb), 0)); }
+  100% { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)) drop-shadow(0 0 0 rgba(var(--rank-color-rgb, var(--accent-rgb)), 0)); }
 }
 
 .level-badge-tooltip {
@@ -1048,8 +1057,8 @@ body[data-theme="purple"] .date-input {
   padding: 28px 48px;
   border-radius: 20px;
   background: var(--card-bg);
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 60px rgba(var(--accent-rgb), 0.55);
+  border: 2px solid var(--rank-color, var(--accent));
+  box-shadow: 0 0 60px rgba(var(--rank-color-rgb, var(--accent-rgb)), 0.55);
   transform: scale(0.4);
   opacity: 0;
   animation: level-up-card-pop 2.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -1074,9 +1083,9 @@ body[data-theme="purple"] .date-input {
 .level-up-num {
   font-size: 56px;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--rank-color, var(--accent));
   line-height: 1;
-  text-shadow: 0 0 24px rgba(var(--accent-rgb), 0.7);
+  text-shadow: 0 0 24px rgba(var(--rank-color-rgb, var(--accent-rgb)), 0.7);
 }
 
 .level-up-title {
