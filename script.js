@@ -102,15 +102,15 @@ function getLevelInfo(xp) {
 
 // Titles + rank color per level range (reseller "career ranks"). Easy to extend.
 const LEVEL_TITLES = [
-  { min: 1, max: 5, key: 'titleNovice', color: 'var(--rank-color-novice)' },
-  { min: 6, max: 10, key: 'titleReseller', color: 'var(--rank-color-reseller)' },
-  { min: 11, max: 15, key: 'titleExperienced', color: 'var(--rank-color-experienced)' },
-  { min: 16, max: 20, key: 'titleSkilled', color: 'var(--rank-color-skilled)' },
-  { min: 21, max: 25, key: 'titlePro', color: 'var(--rank-color-pro)' },
-  { min: 26, max: 30, key: 'titleElite', color: 'var(--rank-color-elite)' },
-  { min: 31, max: 40, key: 'titleMaster', color: 'var(--rank-color-master)' },
-  { min: 41, max: 50, key: 'titleKing', color: 'var(--rank-color-king)' },
-  { min: 51, max: Infinity, key: 'titleLegend', color: 'var(--rank-color-legend)' }
+  { min: 1, max: 5, key: 'titleNovice', color: 'var(--rank-color-novice)', colorRgb: 'var(--rank-color-novice-rgb)' },
+  { min: 6, max: 10, key: 'titleReseller', color: 'var(--rank-color-reseller)', colorRgb: 'var(--rank-color-reseller-rgb)' },
+  { min: 11, max: 15, key: 'titleExperienced', color: 'var(--rank-color-experienced)', colorRgb: 'var(--rank-color-experienced-rgb)' },
+  { min: 16, max: 20, key: 'titleSkilled', color: 'var(--rank-color-skilled)', colorRgb: 'var(--rank-color-skilled-rgb)' },
+  { min: 21, max: 25, key: 'titlePro', color: 'var(--rank-color-pro)', colorRgb: 'var(--rank-color-pro-rgb)' },
+  { min: 26, max: 30, key: 'titleElite', color: 'var(--rank-color-elite)', colorRgb: 'var(--rank-color-elite-rgb)' },
+  { min: 31, max: 40, key: 'titleMaster', color: 'var(--rank-color-master)', colorRgb: 'var(--rank-color-master-rgb)' },
+  { min: 41, max: 50, key: 'titleKing', color: 'var(--rank-color-king)', colorRgb: 'var(--rank-color-king-rgb)' },
+  { min: 51, max: Infinity, key: 'titleLegend', color: 'var(--rank-color-legend)', colorRgb: 'var(--rank-color-legend-rgb)' }
 ];
 
 function getLevelRankEntry(level) {
@@ -144,6 +144,7 @@ function renderLevelBadge(opts) {
   levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
   levelBadgeTitle.textContent = getLevelTitle(info.level);
   levelBadge.style.setProperty('--rank-color', rank.color);
+  levelBadge.style.setProperty('--rank-color-rgb', rank.colorRgb);
 
   if (opts && opts.pulse) {
     levelCircle.classList.remove('level-circle-pulse');
@@ -154,6 +155,9 @@ function renderLevelBadge(opts) {
 }
 
 function playLevelUpEffect(newLevel) {
+  const rank = getLevelRankEntry(newLevel);
+  levelUpOverlay.style.setProperty('--rank-color', rank.color);
+  levelUpOverlay.style.setProperty('--rank-color-rgb', rank.colorRgb);
   levelUpNum.textContent = newLevel;
   levelUpTitle.textContent = getLevelTitle(newLevel);
   levelUpBurst.innerHTML = '';
@@ -166,7 +170,7 @@ function playLevelUpEffect(newLevel) {
     const rad = (angle * Math.PI) / 180;
     p.style.setProperty('--dx', (Math.cos(rad) * dist).toFixed(1) + 'px');
     p.style.setProperty('--dy', (Math.sin(rad) * dist).toFixed(1) + 'px');
-    p.style.background = i % 3 === 0 ? 'var(--accent)' : (i % 3 === 1 ? '#ffd54a' : '#ffffff');
+    p.style.background = i % 3 === 0 ? rank.color : (i % 3 === 1 ? '#ffd54a' : '#ffffff');
     p.style.animationDelay = (Math.random() * 0.15) + 's';
     levelUpBurst.appendChild(p);
   }
