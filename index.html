@@ -20,6 +20,21 @@
 
 <img src="assets/radmirlogo.png" alt="logo" class="corner-logo" id="cornerLogo">
 
+<div class="level-badge" id="levelBadge" title="">
+  <div class="level-circle" id="levelCircle">
+    <div class="level-circle-glow" id="levelCircleGlow"></div>
+    <svg class="level-circle-ring" viewBox="0 0 60 60">
+      <circle class="level-circle-ring-bg" cx="30" cy="30" r="26"></circle>
+      <circle class="level-circle-ring-fill" id="levelCircleRingFill" cx="30" cy="30" r="26"></circle>
+    </svg>
+    <span class="level-circle-num" id="levelBadgeLevel">1</span>
+  </div>
+  <div class="level-badge-info">
+    <span class="level-badge-title" id="levelBadgeTitle">—</span>
+    <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
+  </div>
+</div>
+
 <div class="app">
   <header class="top-header">
     <h1 data-i18n="appTitle">Калькулятор перекупа</h1>
@@ -149,20 +164,6 @@
     </main>
 
     <footer class="bottom-panel">
-      <div class="level-badge" id="levelBadge" title="">
-        <div class="level-circle" id="levelCircle">
-          <svg class="level-circle-ring" viewBox="0 0 60 60">
-            <circle class="level-circle-ring-bg" cx="30" cy="30" r="26"></circle>
-            <circle class="level-circle-ring-fill" id="levelCircleRingFill" cx="30" cy="30" r="26"></circle>
-          </svg>
-          <span class="level-circle-num" id="levelBadgeLevel">1</span>
-        </div>
-        <div class="level-badge-info">
-          <span class="level-badge-title" id="levelBadgeTitle">—</span>
-          <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
-        </div>
-      </div>
-
       <div class="bottom-panel-total">
         <span data-i18n="totalLabel">Загальний заробіток по проекту:</span>
         <span id="totalSum" class="total-sum">0</span>
