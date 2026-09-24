@@ -399,6 +399,7 @@ async function loadUserData() {
     if (state.bgCustomKind === undefined) state.bgCustomKind = null;
     if (!state.bgFit) state.bgFit = 'cover';
     if (typeof state.xp !== 'number') state.xp = 0;
+    let needsMigrationSave = false;
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'RUB';
       p.cars.forEach(c => {
@@ -408,10 +409,19 @@ async function loadUserData() {
         if (!c.iconPos) c.iconPos = { x: 0, y: 0, zoom: 100 };
         if (c.buyDate === undefined) c.buyDate = null;
         if (c.sellDate === undefined) c.sellDate = null;
-        // migration: pre-existing cars never award retroactive XP
-        if (c.xpAwarded === undefined) c.xpAwarded = true;
+        // migration: one-time retroactive XP grant for cars sold before the level system existed
+        if (c.xpAwarded === undefined) {
+          if (c.sellPrice != null) {
+            const adjTotal = (c.adjustments || []).reduce((s, a) => s + a.amount, 0);
+            const profit = c.sellPrice - c.buyPrice + adjTotal;
+            state.xp = (state.xp || 0) + calcSaleXp(profit);
+          }
+          c.xpAwarded = c.sellPrice != null;
+          needsMigrationSave = true;
+        }
       });
     });
+    if (needsMigrationSave) await saveData();
   } else {
     state = defaultState();
     await saveData();
