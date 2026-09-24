@@ -100,22 +100,25 @@ function getLevelInfo(xp) {
   return { level, xp, currentLevelXp, nextLevelXp, xpIntoLevel, xpNeededForLevel, progress };
 }
 
-// Titles per level range (reseller "career ranks"). Easy to extend.
+// Titles + rank color per level range (reseller "career ranks"). Easy to extend.
 const LEVEL_TITLES = [
-  { min: 1, max: 5, key: 'titleNovice' },
-  { min: 6, max: 10, key: 'titleReseller' },
-  { min: 11, max: 15, key: 'titleExperienced' },
-  { min: 16, max: 20, key: 'titleSkilled' },
-  { min: 21, max: 25, key: 'titlePro' },
-  { min: 26, max: 30, key: 'titleElite' },
-  { min: 31, max: 40, key: 'titleMaster' },
-  { min: 41, max: 50, key: 'titleKing' },
-  { min: 51, max: Infinity, key: 'titleLegend' }
+  { min: 1, max: 5, key: 'titleNovice', color: 'var(--rank-color-novice)' },
+  { min: 6, max: 10, key: 'titleReseller', color: 'var(--rank-color-reseller)' },
+  { min: 11, max: 15, key: 'titleExperienced', color: 'var(--rank-color-experienced)' },
+  { min: 16, max: 20, key: 'titleSkilled', color: 'var(--rank-color-skilled)' },
+  { min: 21, max: 25, key: 'titlePro', color: 'var(--rank-color-pro)' },
+  { min: 26, max: 30, key: 'titleElite', color: 'var(--rank-color-elite)' },
+  { min: 31, max: 40, key: 'titleMaster', color: 'var(--rank-color-master)' },
+  { min: 41, max: 50, key: 'titleKing', color: 'var(--rank-color-king)' },
+  { min: 51, max: Infinity, key: 'titleLegend', color: 'var(--rank-color-legend)' }
 ];
 
+function getLevelRankEntry(level) {
+  return LEVEL_TITLES.find(r => level >= r.min && level <= r.max) || LEVEL_TITLES[LEVEL_TITLES.length - 1];
+}
+
 function getLevelTitle(level) {
-  const entry = LEVEL_TITLES.find(r => level >= r.min && level <= r.max) || LEVEL_TITLES[LEVEL_TITLES.length - 1];
-  return t(entry.key);
+  return t(getLevelRankEntry(level).key);
 }
 
 function awardSaleXp(profit) {
@@ -133,12 +136,14 @@ const LEVEL_RING_CIRCUMFERENCE = 2 * Math.PI * 26; // r=26 from the SVG circle
 function renderLevelBadge(opts) {
   if (!levelBadge) return;
   const info = getLevelInfo(state.xp || 0);
+  const rank = getLevelRankEntry(info.level);
   levelBadgeLevel.textContent = info.level;
   const offset = LEVEL_RING_CIRCUMFERENCE * (1 - info.progress);
   levelCircleRingFill.style.strokeDasharray = LEVEL_RING_CIRCUMFERENCE.toFixed(2);
   levelCircleRingFill.style.strokeDashoffset = offset.toFixed(2);
   levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
   levelBadgeTitle.textContent = getLevelTitle(info.level);
+  levelBadge.style.setProperty('--rank-color', rank.color);
   levelBadge.title = `${getLevelTitle(info.level)} — ${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
 
   if (opts && opts.pulse) {
@@ -232,6 +237,7 @@ const carIconSaveBtn = document.getElementById('carIconSaveBtn');
 const levelBadge = document.getElementById('levelBadge');
 const levelBadgeLevel = document.getElementById('levelBadgeLevel');
 const levelCircle = document.getElementById('levelCircle');
+const levelCircleGlow = document.getElementById('levelCircleGlow');
 const levelCircleRingFill = document.getElementById('levelCircleRingFill');
 const levelBadgeXpText = document.getElementById('levelBadgeXpText');
 const levelBadgeTitle = document.getElementById('levelBadgeTitle');
