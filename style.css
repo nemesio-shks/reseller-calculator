@@ -615,6 +615,57 @@ tbody tr:hover {
   filter: brightness(1.1);
 }
 
+.date-cell {
+  min-width: 150px;
+}
+
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.date-row:last-child {
+  margin-bottom: 0;
+}
+
+.date-row-label {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  min-width: 52px;
+}
+
+.date-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  padding: 3px 6px;
+  color: var(--text-main);
+  font-size: 12px;
+  width: 128px;
+}
+
+body[data-theme="light"] .date-input {
+  color-scheme: light;
+}
+
+body[data-theme="dark"] .date-input,
+body[data-theme="purple"] .date-input {
+  color-scheme: dark;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.date-input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .empty-msg {
   text-align: center;
   color: var(--muted);

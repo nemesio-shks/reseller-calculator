@@ -4,6 +4,14 @@ function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+function todayDateStr() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 // ---------- IndexedDB storage for custom bg video/gif (local to this browser) ----------
 const IDB_NAME = 'reseller_calc_media';
 const IDB_STORE = 'bgMedia';
@@ -335,6 +343,8 @@ async function loadUserData() {
         if (!c.comments) c.comments = [];
         if (c.image === undefined) c.image = null;
         if (!c.iconPos) c.iconPos = { x: 0, y: 0, zoom: 100 };
+        if (c.buyDate === undefined) c.buyDate = null;
+        if (c.sellDate === undefined) c.sellDate = null;
       });
     });
   } else {
@@ -1000,7 +1010,9 @@ importProjectInput.addEventListener('change', () => {
           adjustments: Array.isArray(car.adjustments) ? car.adjustments : [],
           comments: Array.isArray(car.comments) ? car.comments : [],
           image: car.image || null,
-          iconPos: car.iconPos || { x: 0, y: 0, zoom: 100 }
+          iconPos: car.iconPos || { x: 0, y: 0, zoom: 100 },
+          buyDate: car.buyDate || null,
+          sellDate: car.sellDate || null
         }))
       };
 
@@ -1043,6 +1055,16 @@ function renderHistory() {
         }
       </td>
       <td>${escapeHtml(car.name)}${car.comment ? `<div class="car-subcomment">${escapeHtml(car.comment)}</div>` : ''}</td>
+      <td class="date-cell">
+        <div class="date-row">
+          <span class="date-row-label">${t('dateBuyLabel')}:</span>
+          <input type="date" class="date-input" data-id="${car.id}" data-field="buyDate" value="${car.buyDate || ''}">
+        </div>
+        <div class="date-row">
+          <span class="date-row-label">${t('dateSellLabel')}:</span>
+          <input type="date" class="date-input" data-id="${car.id}" data-field="sellDate" value="${car.sellDate || ''}" ${isSold ? '' : 'disabled'}>
+        </div>
+      </td>
       <td>${formatMoney(car.buyPrice, project.currency)}</td>
       <td>${isSold ? formatMoney(car.sellPrice, project.currency) : '—'}</td>
       <td>${adjTotal ? (adjTotal >= 0 ? '+' : '') + formatMoney(adjTotal, project.currency) : '—'} <span class="link-btn" data-id="${car.id}" data-action="adjust">${t('editComment')}</span></td>
@@ -1064,6 +1086,17 @@ function renderHistory() {
   });
 
   historyBody.querySelectorAll('.inline-sell-input').forEach(attachThousandsFormatting);
+
+  historyBody.querySelectorAll('.date-input').forEach(input => {
+    input.addEventListener('change', () => {
+      const id = input.getAttribute('data-id');
+      const field = input.getAttribute('data-field');
+      const car = project.cars.find(c => c.id === id);
+      if (!car) return;
+      car[field] = input.value || null;
+      scheduleSave();
+    });
+  });
 
   historyBody.querySelectorAll('.car-history-icon, .car-history-icon-empty').forEach(el => {
     const id = el.getAttribute('data-id');
@@ -1111,6 +1144,7 @@ function renderHistory() {
         return;
       }
       car.sellPrice = price;
+      if (!car.sellDate) car.sellDate = todayDateStr();
       scheduleSave();
       renderAll();
     });
@@ -1245,7 +1279,9 @@ carForm.addEventListener('submit', (e) => {
     adjustments: [],
     comments: [],
     image: selectedCarImage || null,
-    iconPos: { x: 0, y: 0, zoom: 100 }
+    iconPos: { x: 0, y: 0, zoom: 100 },
+    buyDate: todayDateStr(),
+    sellDate: notSold ? null : todayDateStr()
   });
   scheduleSave();
   carForm.reset();
