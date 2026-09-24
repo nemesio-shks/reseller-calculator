@@ -63,7 +63,55 @@ function defaultProject(name) {
 
 function defaultState() {
   const p = defaultProject('Проект 1');
-  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 }, bgType: 'video', bgFit: 'cover' };
+  return { activeId: p.id, projects: [p], theme: 'dark', bgImage: null, bgPos: { x: 0, y: 0, zoom: 100 }, bgType: 'video', bgFit: 'cover', bgCustomKind: null, xp: 0 };
+}
+
+// ---------- Level system (reseller experience) ----------
+// XP is awarded once per car, the first time it gets marked as sold.
+// Base XP per deal + bonus scaled by profit (profitable deals give more).
+const XP_BASE_PER_SALE = 10;
+const XP_PROFIT_DIVISOR = 1000; // 1000 currency units of profit = +1 XP (capped)
+const XP_PROFIT_BONUS_CAP = 90; // max bonus XP from profit per single sale
+
+function calcSaleXp(profit) {
+  const bonus = Math.max(0, Math.floor((profit || 0) / XP_PROFIT_DIVISOR));
+  return XP_BASE_PER_SALE + Math.min(bonus, XP_PROFIT_BONUS_CAP);
+}
+
+// XP required to REACH a given level (level 1 = 0 XP)
+function xpForLevel(level) {
+  if (level <= 1) return 0;
+  return Math.round(100 * Math.pow(level - 1, 1.5));
+}
+
+function levelFromXp(xp) {
+  let level = 1;
+  while (xpForLevel(level + 1) <= xp) level++;
+  return level;
+}
+
+function getLevelInfo(xp) {
+  const level = levelFromXp(xp);
+  const currentLevelXp = xpForLevel(level);
+  const nextLevelXp = xpForLevel(level + 1);
+  const xpIntoLevel = xp - currentLevelXp;
+  const xpNeededForLevel = nextLevelXp - currentLevelXp;
+  const progress = xpNeededForLevel > 0 ? Math.min(1, xpIntoLevel / xpNeededForLevel) : 1;
+  return { level, xp, currentLevelXp, nextLevelXp, xpIntoLevel, xpNeededForLevel, progress };
+}
+
+function awardSaleXp(profit) {
+  state.xp = (state.xp || 0) + calcSaleXp(profit);
+  renderLevelBadge();
+}
+
+function renderLevelBadge() {
+  if (!levelBadge) return;
+  const info = getLevelInfo(state.xp || 0);
+  levelBadgeLevel.textContent = info.level;
+  levelBadgeFill.style.width = (info.progress * 100) + '%';
+  levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
+  levelBadge.title = `${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
 }
 
 let state = defaultState();
@@ -117,16 +165,21 @@ const carIconResetBtn = document.getElementById('carIconResetBtn');
 const carIconCancelBtn = document.getElementById('carIconCancelBtn');
 const carIconSaveBtn = document.getElementById('carIconSaveBtn');
 
+const levelBadge = document.getElementById('levelBadge');
+const levelBadgeLevel = document.getElementById('levelBadgeLevel');
+const levelBadgeFill = document.getElementById('levelBadgeFill');
+const levelBadgeXpText = document.getElementById('levelBadgeXpText');
+
 const langSelect = document.getElementById('langSelect');
 const themeSelect = document.getElementById('themeSelect');
-const bgInput = document.getElementById('bgInput');
-const bgResetBtn = document.getElementById('bgResetBtn');
 const bgLayer = document.getElementById('bgLayer');
 
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsModal = document.getElementById('settingsModal');
 const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 const bgEditBtn = document.getElementById('bgEditBtn');
+const customBgRow = document.getElementById('customBgRow');
+const customBgHint = document.getElementById('customBgHint');
 
 const bgEditorModal = document.getElementById('bgEditorModal');
 const bgEditorViewport = document.getElementById('bgEditorViewport');
@@ -335,7 +388,17 @@ async function loadUserData() {
     if (!state.theme) state.theme = 'dark';
     if (!state.bgPos) state.bgPos = { x: 0, y: 0, zoom: 100 };
     if (!state.bgType) state.bgType = 'video';
+    // migrate old separate types ("image" / "custom-video") into unified "custom"
+    if (state.bgType === 'image') {
+      state.bgType = 'custom';
+      state.bgCustomKind = 'image';
+    } else if (state.bgType === 'custom-video') {
+      state.bgType = 'custom';
+      state.bgCustomKind = 'video';
+    }
+    if (state.bgCustomKind === undefined) state.bgCustomKind = null;
     if (!state.bgFit) state.bgFit = 'cover';
+    if (typeof state.xp !== 'number') state.xp = 0;
     state.projects.forEach(p => {
       if (!p.currency) p.currency = 'RUB';
       p.cars.forEach(c => {
@@ -345,6 +408,8 @@ async function loadUserData() {
         if (!c.iconPos) c.iconPos = { x: 0, y: 0, zoom: 100 };
         if (c.buyDate === undefined) c.buyDate = null;
         if (c.sellDate === undefined) c.sellDate = null;
+        // migration: pre-existing cars never award retroactive XP
+        if (c.xpAwarded === undefined) c.xpAwarded = true;
       });
     });
   } else {
@@ -384,15 +449,27 @@ let bgLayerResizeHandler = () => {};
 let currentCustomVideoUrl = null;
 
 // ---------- Background image ----------
+function updateCustomBgControlsVisibility() {
+  const bgType = state.bgType || 'video';
+  const isCustom = bgType === 'custom';
+  customBgRow.classList.toggle('hidden', !isCustom);
+  customBgHint.classList.toggle('hidden', !isCustom);
+  const hasCustomMedia = isCustom && !!state.bgCustomKind;
+  bgEditBtn.classList.toggle('hidden', !(hasCustomMedia && state.bgCustomKind === 'image'));
+  bgVideoResetBtn.classList.toggle('hidden', !hasCustomMedia);
+}
+
 function applyBackground() {
   const bgType = state.bgType || 'video';
   const fit = state.bgFit || 'cover';
   bgTypeSelect.value = bgType;
   bgFitSelect.value = fit;
+  updateCustomBgControlsVisibility();
 
   const useDefaultVideo = bgType === 'video';
-  const useImage = bgType === 'image';
-  const useCustomVideo = bgType === 'custom-video';
+  const useCustom = bgType === 'custom';
+  const useImage = useCustom && state.bgCustomKind === 'image';
+  const useCustomVideo = useCustom && state.bgCustomKind === 'video';
 
   bgVideoEl.classList.toggle('hidden', !useDefaultVideo);
   if (useDefaultVideo) bgVideoEl.play().catch(() => {}); else bgVideoEl.pause();
@@ -420,7 +497,7 @@ function applyBackground() {
 
   if (useCustomVideo) {
     loadCustomBgMedia('bgCustomFile').then(stored => {
-      if (!stored || state.bgType !== 'custom-video') return;
+      if (!stored || state.bgType !== 'custom' || state.bgCustomKind !== 'video') return;
       if (currentCustomVideoUrl) {
         URL.revokeObjectURL(currentCustomVideoUrl);
         currentCustomVideoUrl = null;
@@ -478,20 +555,44 @@ bgVideoInput.addEventListener('change', async () => {
   const file = bgVideoInput.files[0];
   if (!file) return;
 
-  const allowedTypes = ['video/mp4', 'video/webm', 'image/gif'];
-  if (!allowedTypes.includes(file.type)) {
+  const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp';
+  const isGif = file.type === 'image/gif';
+  const isVideo = file.type === 'video/mp4' || file.type === 'video/webm';
+
+  if (!isImage && !isGif && !isVideo) {
     alert(t('bgVideoWrongType'));
     bgVideoInput.value = '';
     return;
   }
 
+  // static image: goes through bgImage (base64, synced), same as before
+  if (isImage) {
+    try {
+      const compressed = await compressImageFile(file, 1600, 0.75);
+      state.bgImage = compressed;
+      state.bgPos = { x: 0, y: 0, zoom: 100 };
+      state.bgType = 'custom';
+      state.bgCustomKind = 'image';
+      await deleteCustomBgMedia('bgCustomFile').catch(() => {});
+      applyBackground();
+      scheduleSave();
+      openBgEditor();
+    } catch (err) {
+      console.error('Помилка обробки зображення:', err);
+      alert(t('imageProcessError'));
+    }
+    bgVideoInput.value = '';
+    return;
+  }
+
+  // video / gif: goes through IndexedDB (local to browser)
   if (file.size > CUSTOM_BG_MAX_BYTES) {
     alert(t('bgVideoTooLarge'));
     bgVideoInput.value = '';
     return;
   }
 
-  if (file.type !== 'image/gif') {
+  if (isVideo) {
     try {
       const duration = await getVideoDuration(file);
       if (duration > CUSTOM_BG_MAX_DURATION) {
@@ -506,7 +607,9 @@ bgVideoInput.addEventListener('change', async () => {
 
   try {
     await saveCustomBgMedia('bgCustomFile', { blob: file, mimeType: file.type });
-    state.bgType = 'custom-video';
+    state.bgImage = null;
+    state.bgType = 'custom';
+    state.bgCustomKind = 'video';
     state.bgPos = { x: 0, y: 0, zoom: 100 };
     applyBackground();
     scheduleSave();
@@ -523,9 +626,9 @@ bgVideoResetBtn.addEventListener('click', async () => {
   } catch (err) {
     console.error(err);
   }
-  if (state.bgType === 'custom-video') {
-    state.bgType = 'video';
-  }
+  state.bgImage = null;
+  state.bgType = 'video';
+  state.bgCustomKind = null;
   applyBackground();
   scheduleSave();
 });
@@ -561,31 +664,6 @@ function compressImageFile(file, maxDimension, quality) {
     reader.readAsDataURL(file);
   });
 }
-
-bgInput.addEventListener('change', async () => {
-  const file = bgInput.files[0];
-  if (!file) return;
-  try {
-    const compressed = await compressImageFile(file, 1600, 0.75);
-    state.bgImage = compressed;
-    state.bgPos = { x: 0, y: 0, zoom: 100 };
-    state.bgType = 'image';
-    applyBackground();
-    scheduleSave();
-    openBgEditor();
-  } catch (err) {
-    console.error('Помилка обробки зображення:', err);
-    alert(t('imageProcessError'));
-  }
-  bgInput.value = '';
-});
-
-bgResetBtn.addEventListener('click', () => {
-  state.bgImage = null;
-  state.bgPos = { x: 0, y: 0, zoom: 100 };
-  applyBackground();
-  scheduleSave();
-});
 
 // ---------- Settings modal ----------
 settingsBtn.addEventListener('click', () => {
@@ -641,10 +719,7 @@ function updateBgEditorTransform() {
 }
 
 bgEditBtn.addEventListener('click', () => {
-  if (!state.bgImage) {
-    bgInput.click();
-    return;
-  }
+  if (!state.bgImage) return;
   openBgEditor();
 });
 
@@ -1145,6 +1220,12 @@ function renderHistory() {
       }
       car.sellPrice = price;
       if (!car.sellDate) car.sellDate = todayDateStr();
+      if (!car.xpAwarded) {
+        const adjTotal = (car.adjustments || []).reduce((s, a) => s + a.amount, 0);
+        const profit = car.sellPrice - car.buyPrice + adjTotal;
+        awardSaleXp(profit);
+        car.xpAwarded = true;
+      }
       scheduleSave();
       renderAll();
     });
@@ -1270,7 +1351,7 @@ carForm.addEventListener('submit', (e) => {
   if (!notSold && isNaN(sellPrice)) return;
 
   const project = getActiveProject();
-  project.cars.push({
+  const newCar = {
     id: uid(),
     name,
     buyPrice,
@@ -1281,8 +1362,14 @@ carForm.addEventListener('submit', (e) => {
     image: selectedCarImage || null,
     iconPos: { x: 0, y: 0, zoom: 100 },
     buyDate: todayDateStr(),
-    sellDate: notSold ? null : todayDateStr()
-  });
+    sellDate: notSold ? null : todayDateStr(),
+    xpAwarded: false
+  };
+  if (!notSold) {
+    awardSaleXp(sellPrice - buyPrice);
+    newCar.xpAwarded = true;
+  }
+  project.cars.push(newCar);
   scheduleSave();
   carForm.reset();
   sellPriceInput.disabled = false;
@@ -1297,6 +1384,7 @@ function renderAll() {
   renderTabs();
   renderProjectHeader();
   renderHistory();
+  renderLevelBadge();
 }
 
 // ---------- Animated background particles ----------
