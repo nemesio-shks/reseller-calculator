@@ -49,6 +49,16 @@
   </section>
 
   <div id="appContent" class="hidden">
+    <div class="user-bar">
+      <div class="user-bar-left">
+        <img src="assets/r_rp.png" alt="R_RP" class="brand-logo shine">
+        <span id="userEmailLabel"></span>
+      </div>
+      <div class="user-bar-right">
+        <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
+      </div>
+    </div>
+
     <div class="projects-bar">
       <div class="projects-tabs" id="projectsTabs"></div>
       <button class="icon-btn-sm" id="exportProjectBtn" title="Зберегти пресет проекту" data-i18n-title="exportProjectTitle">💾</button>
@@ -139,20 +149,17 @@
     </main>
 
     <footer class="bottom-panel">
-      <div class="bottom-panel-account">
-        <img src="assets/r_rp.png" alt="R_RP" class="brand-logo shine">
-        <div class="bottom-panel-account-info">
-          <span id="userEmailLabel" class="bottom-panel-email"></span>
-          <div class="level-badge" id="levelBadge" title="">
-            <span class="level-badge-title" id="levelBadgeTitle">—</span>
-            <span class="level-badge-num" data-i18n="levelShort">Рівень</span>
-            <span class="level-badge-num" id="levelBadgeLevel">1</span>
-            <div class="level-badge-bar">
-              <div class="level-badge-fill" id="levelBadgeFill"></div>
-              <div class="level-badge-fill-glow" id="levelBadgeFillGlow"></div>
-            </div>
-            <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
-          </div>
+      <div class="level-badge" id="levelBadge" title="">
+        <div class="level-circle" id="levelCircle">
+          <svg class="level-circle-ring" viewBox="0 0 60 60">
+            <circle class="level-circle-ring-bg" cx="30" cy="30" r="26"></circle>
+            <circle class="level-circle-ring-fill" id="levelCircleRingFill" cx="30" cy="30" r="26"></circle>
+          </svg>
+          <span class="level-circle-num" id="levelBadgeLevel">1</span>
+        </div>
+        <div class="level-badge-info">
+          <span class="level-badge-title" id="levelBadgeTitle">—</span>
+          <span class="level-badge-xp" id="levelBadgeXpText">0 / 100 XP</span>
         </div>
       </div>
 
@@ -160,8 +167,6 @@
         <span data-i18n="totalLabel">Загальний заробіток по проекту:</span>
         <span id="totalSum" class="total-sum">0</span>
       </div>
-
-      <button class="btn btn-add-project" id="logoutBtn" data-i18n="logoutBtn">Вийти</button>
     </footer>
   </div>
 </div>

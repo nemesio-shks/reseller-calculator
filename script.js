@@ -69,9 +69,9 @@ function defaultState() {
 // ---------- Level system (reseller experience) ----------
 // XP is awarded once per car, the first time it gets marked as sold.
 // Base XP per deal + bonus scaled by profit (profitable deals give more).
-const XP_BASE_PER_SALE = 10;
-const XP_PROFIT_DIVISOR = 1000; // 1000 currency units of profit = +1 XP (capped)
-const XP_PROFIT_BONUS_CAP = 90; // max bonus XP from profit per single sale
+const XP_BASE_PER_SALE = 25;
+const XP_PROFIT_DIVISOR = 500; // every 500 currency units of profit = +1 XP (capped)
+const XP_PROFIT_BONUS_CAP = 150; // max bonus XP from profit per single sale
 
 function calcSaleXp(profit) {
   const bonus = Math.max(0, Math.floor((profit || 0) / XP_PROFIT_DIVISOR));
@@ -81,7 +81,7 @@ function calcSaleXp(profit) {
 // XP required to REACH a given level (level 1 = 0 XP)
 function xpForLevel(level) {
   if (level <= 1) return 0;
-  return Math.round(100 * Math.pow(level - 1, 1.5));
+  return Math.round(60 * Math.pow(level - 1, 1.35));
 }
 
 function levelFromXp(xp) {
@@ -128,23 +128,24 @@ function awardSaleXp(profit) {
   }
 }
 
+const LEVEL_RING_CIRCUMFERENCE = 2 * Math.PI * 26; // r=26 from the SVG circle
+
 function renderLevelBadge(opts) {
   if (!levelBadge) return;
   const info = getLevelInfo(state.xp || 0);
   levelBadgeLevel.textContent = info.level;
-  levelBadgeFill.style.width = (info.progress * 100) + '%';
+  const offset = LEVEL_RING_CIRCUMFERENCE * (1 - info.progress);
+  levelCircleRingFill.style.strokeDasharray = LEVEL_RING_CIRCUMFERENCE.toFixed(2);
+  levelCircleRingFill.style.strokeDashoffset = offset.toFixed(2);
   levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
   levelBadgeTitle.textContent = getLevelTitle(info.level);
   levelBadge.title = `${getLevelTitle(info.level)} — ${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
 
   if (opts && opts.pulse) {
-    levelBadge.classList.remove('level-badge-pulse');
+    levelCircle.classList.remove('level-circle-pulse');
     // force reflow so the animation can restart
-    void levelBadge.offsetWidth;
-    levelBadge.classList.add('level-badge-pulse');
-    levelBadgeFillGlow.classList.remove('level-badge-fill-glow-anim');
-    void levelBadgeFillGlow.offsetWidth;
-    levelBadgeFillGlow.classList.add('level-badge-fill-glow-anim');
+    void levelCircle.offsetWidth;
+    levelCircle.classList.add('level-circle-pulse');
   }
 }
 
@@ -230,8 +231,8 @@ const carIconSaveBtn = document.getElementById('carIconSaveBtn');
 
 const levelBadge = document.getElementById('levelBadge');
 const levelBadgeLevel = document.getElementById('levelBadgeLevel');
-const levelBadgeFill = document.getElementById('levelBadgeFill');
-const levelBadgeFillGlow = document.getElementById('levelBadgeFillGlow');
+const levelCircle = document.getElementById('levelCircle');
+const levelCircleRingFill = document.getElementById('levelCircleRingFill');
 const levelBadgeXpText = document.getElementById('levelBadgeXpText');
 const levelBadgeTitle = document.getElementById('levelBadgeTitle');
 
