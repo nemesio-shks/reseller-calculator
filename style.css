@@ -916,12 +916,16 @@ body[data-theme="purple"] .date-input {
   gap: 1px;
   text-align: center;
   pointer-events: auto;
+  width: 96px;
+  margin-left: -16px;
 }
 
 .level-badge-title {
   font-weight: 700;
   color: var(--rank-color, var(--text-main));
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.2;
   font-size: 11px;
   text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
@@ -948,6 +952,10 @@ body[data-theme="purple"] .date-input {
     width: 36px;
     height: 36px;
     font-size: 16px;
+  }
+  .level-badge-info {
+    width: 84px;
+    margin-left: -12px;
   }
   .level-badge-title,
   .level-badge-xp {
