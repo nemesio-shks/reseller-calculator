@@ -144,7 +144,6 @@ function renderLevelBadge(opts) {
   levelBadgeXpText.textContent = `${info.xpIntoLevel} / ${info.xpNeededForLevel} XP`;
   levelBadgeTitle.textContent = getLevelTitle(info.level);
   levelBadge.style.setProperty('--rank-color', rank.color);
-  levelBadge.title = `${getLevelTitle(info.level)} — ${t('levelLabel')} ${info.level} — ${info.xpIntoLevel}/${info.xpNeededForLevel} XP`;
 
   if (opts && opts.pulse) {
     levelCircle.classList.remove('level-circle-pulse');
