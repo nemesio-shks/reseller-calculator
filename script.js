@@ -1135,7 +1135,8 @@ addProjectBtn.addEventListener('click', () => {
 // ---------- Export / Import project preset (backup file) ----------
 exportProjectBtn.addEventListener('click', () => {
   const project = getActiveProject();
-  const dataStr = JSON.stringify(project, null, 2);
+  const exportPayload = { ...project, xp: state.xp || 0 };
+  const dataStr = JSON.stringify(exportPayload, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const safeName = (project.name || 'project').replace(/[\\/:*?"<>|]/g, '_');
@@ -1164,24 +1165,50 @@ importProjectInput.addEventListener('change', () => {
         throw new Error('invalid preset structure');
       }
 
+      let importedXpGained = 0;
+
       const newProject = {
         id: uid(),
         name: imported.name || 'Імпортований проект',
         currency: imported.currency || 'RUB',
-        cars: imported.cars.map(car => ({
-          id: uid(),
-          name: car.name || '',
-          buyPrice: typeof car.buyPrice === 'number' ? car.buyPrice : 0,
-          sellPrice: typeof car.sellPrice === 'number' ? car.sellPrice : null,
-          comment: car.comment || '',
-          adjustments: Array.isArray(car.adjustments) ? car.adjustments : [],
-          comments: Array.isArray(car.comments) ? car.comments : [],
-          image: car.image || null,
-          iconPos: car.iconPos || { x: 0, y: 0, zoom: 100 },
-          buyDate: car.buyDate || null,
-          sellDate: car.sellDate || null
-        }))
+        cars: imported.cars.map(car => {
+          const buyPrice = typeof car.buyPrice === 'number' ? car.buyPrice : 0;
+          const sellPrice = typeof car.sellPrice === 'number' ? car.sellPrice : null;
+          const adjustments = Array.isArray(car.adjustments) ? car.adjustments : [];
+
+          // Award XP for sold cars that haven't granted XP yet (fresh import from a backup/another account)
+          let xpAwarded = car.xpAwarded;
+          if (xpAwarded === undefined) {
+            if (sellPrice != null) {
+              const adjTotal = adjustments.reduce((s, a) => s + a.amount, 0);
+              const profit = sellPrice - buyPrice + adjTotal;
+              importedXpGained += calcSaleXp(profit);
+              xpAwarded = true;
+            } else {
+              xpAwarded = false;
+            }
+          }
+
+          return {
+            id: uid(),
+            name: car.name || '',
+            buyPrice,
+            sellPrice,
+            comment: car.comment || '',
+            adjustments,
+            comments: Array.isArray(car.comments) ? car.comments : [],
+            image: car.image || null,
+            iconPos: car.iconPos || { x: 0, y: 0, zoom: 100 },
+            buyDate: car.buyDate || null,
+            sellDate: car.sellDate || null,
+            xpAwarded
+          };
+        })
       };
+
+      if (importedXpGained > 0) {
+        state.xp = (state.xp || 0) + importedXpGained;
+      }
 
       state.projects.push(newProject);
       state.activeId = newProject.id;
